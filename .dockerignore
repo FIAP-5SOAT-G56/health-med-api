@@ -1,0 +1,15 @@
+.git
+.vscode
+.github
+.idea
+coverage
+makefile
+README.md
+docker-compose.yml
+Dockerfile
+commitlint.config.js
+.gitignore
+.editorconfig
+.env.example
+.env.local.example
+.dockerignore
