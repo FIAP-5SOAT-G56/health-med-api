@@ -7,6 +7,7 @@ import User from '@/core/domain/entities/usuario'
 import IUserRepository from '@/core/domain/repositories/iusuario.repository'
 import { User as Entity } from '@/infra/persistence/typeorm/entities/user'
 import Email from '@/core/domain/value-object/email'
+import Cpf from '@/core/domain/value-object/Cpf'
 
 @Injectable()
 export default class UserTypeormRepository implements IUserRepository {
@@ -40,5 +41,24 @@ export default class UserTypeormRepository implements IUserRepository {
     })
 
     return user ? User.buildExistingUsuario(user.id, user.name, user.email, user.cpf, user.password, user.salt) : undefined
+  }
+
+  async findByCpf(cpf: Cpf): Promise<User | undefined> {
+    const user = await this.repository.findOneBy({
+      cpf: cpf.toString()
+    })
+
+    return user ? User.buildExistingUsuario(user.id, user.name, user.email, user.cpf, user.password, user.salt) : undefined
+  }
+
+  async save(input: User): Promise<void> {
+        await this.repository.update(
+          { id: input.id},{
+      cpf: input.cpf.toString(),
+      email: input.email.toString(),
+      name: input.name.toString(),
+      password: input.password.value,
+      salt: input.password.salt,
+    })
   }
 }

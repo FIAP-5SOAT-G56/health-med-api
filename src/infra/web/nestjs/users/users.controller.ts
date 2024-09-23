@@ -19,12 +19,14 @@ import IUserRepository, { IUserRepository as IUserRepositorySymbol }  from '@/co
 import { Gateway } from '@/core/operation/gateway/gateway'
 import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
 import { MedicoGateway } from '@/core/operation/gateway/medico.gateway'
+import { JwtNestService } from '@/infra/service/jwt.nest.service'
 @Controller('v1/users')
 @ApiTags('v1/users')
 export class UsersController {
   constructor (
     @Inject(IMedicoRepositorySymbol) private readonly repository: IMedicoRepository,
     @Inject(IUserRepositorySymbol) private readonly userRepository: IUserRepository,
+    private readonly jwtService: JwtNestService,
   ) {}
 
   @Post()
@@ -32,14 +34,19 @@ export class UsersController {
   @ApiOperation({ summary: 'Criar um novo Usuario' })
   @ApiBody({ type: CreateUserRequest })
   @ApiCreatedResponse({ description: 'usuario criado', type: ConsumidorResponse })
-  signUp (
+  async signUp (
     @Body() input: CreateUserRequest
   ): Promise<UserResponse> {
     const gateway = new Gateway(new UsuarioGateway(this.userRepository), new MedicoGateway(this.repository))
 
     const controller = new UsuarioController(gateway)
-
-    return controller.create(input)
+    const user = await controller.create(input);
+    return {
+        id: user.id ?? 0,
+        name: user.name.toString(),
+        email: user.email.toString(),
+        cpf: user.cpf.toString()
+    }
   }
 
  // @Public()
@@ -57,7 +64,7 @@ export class UsersController {
 
     const controller = new UsuarioController(gateway)
 
-    return controller.signIn(input)
+    return controller.signIn(input, this.jwtService)
   }
 }
 

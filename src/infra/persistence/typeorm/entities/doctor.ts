@@ -12,7 +12,7 @@ export class Doctor {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({ type: 'string' })
+  @Column({ type: 'varchar' })
   crm: string
 
   @Column({ name: 'user_id' })

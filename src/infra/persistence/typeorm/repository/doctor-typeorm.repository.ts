@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-
 import { Repository } from 'typeorm'
-
 import Doctor from '@/core/domain/entities/doctor'
 import IDoctorRepository from '@/core/domain/repositories/imedico.repository'
 import { Doctor as Entity } from '@/infra/persistence/typeorm/entities/doctor'

@@ -1,4 +1,5 @@
 import SignInDto from '@/core/domain/dto/input/sign-in.dto'
+import { JwtDto } from '@/core/domain/dto/output/jwt.dto'
 import BusinessException from '@/core/domain/errors/business-exception'
 import { JwtService } from '@/core/domain/service/jtw-service'
 import Email from '@/core/domain/value-object/email'
@@ -10,7 +11,7 @@ export default class SignInUseCase {
     private readonly jwtService: JwtService,
   ) {}
 
-  async handle (input: SignInDto): Promise<{access_token: string}> {
+  async handle (input: SignInDto): Promise<JwtDto> {
     const user = await this.gateway.usuario.findByEmail(new Email(input.email))
     if (!user) {
       throw new BusinessException('Invalid')

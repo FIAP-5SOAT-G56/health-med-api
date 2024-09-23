@@ -1,5 +1,6 @@
 import Usuario from '@/core/domain/entities/usuario'
 import Repository from '@/core/domain/repositories/iusuario.repository'
+import Cpf from '@/core/domain/value-object/Cpf'
 import Email from '@/core/domain/value-object/email'
 
 export class UsuarioGateway {
@@ -18,4 +19,11 @@ export class UsuarioGateway {
     return this.respository.findByEmail(email)
   }
 
+  findByCpf (cpf: Cpf): Promise<Usuario | undefined> {
+    return this.respository.findByCpf(cpf)
+  }
+
+  save (input: Usuario): Promise<void> {
+    return this.respository.save(input)
+  }
 }

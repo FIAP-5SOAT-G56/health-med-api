@@ -16,7 +16,7 @@ export default class CreateUsuarioUseCase {
       throw new BusinessException('Usuario já existe')
     }
 
-    const usuarioByCpf = await this.gateway.usuario.findByCPF(new Cpf(input.cpf))
+    const usuarioByCpf = await this.gateway.usuario.findByCpf(new Cpf(input.cpf))
     if (usuarioByCpf) {
       throw new BusinessException('Usuario já existe')
     }
@@ -28,7 +28,7 @@ export default class CreateUsuarioUseCase {
       input.password,
     );
 
-    await this.gateway.usuario.save(usuarioCriado)
+    await this.gateway.usuario.create(usuarioCriado)
 
     return usuarioCriado
   }
