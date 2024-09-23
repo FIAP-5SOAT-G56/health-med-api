@@ -6,7 +6,11 @@ export default class Name {
     this.value = name;
   }
 
-  getValue() {
+  getValue(): string  {
     return this.value;
+  }
+
+  public toString (): string {
+    return this.getValue()
   }
 }

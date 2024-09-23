@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner, TableForeignKey } from 'typeorm'
 
-export class CreateTableUser1704851869029 implements MigrationInterface {
-    name = 'CreateTableUser1704851869029'
+export class CreateTableDoctor1704851869029 implements MigrationInterface {
+    name = 'CreateTableDoctor1704851869029'
 
     public async up (queryRunner: QueryRunner): Promise<void> {
       await queryRunner.query('CREATE TABLE `doctors` (' +
@@ -26,6 +26,6 @@ export class CreateTableUser1704851869029 implements MigrationInterface {
     }
 
     public async down (queryRunner: QueryRunner): Promise<void> {
-      await queryRunner.query('DROP TABLE `users`')
+      await queryRunner.query('DROP TABLE `doctors`')
     }
 }

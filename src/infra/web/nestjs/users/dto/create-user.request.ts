@@ -12,6 +12,6 @@ export class CreateUserRequest implements UserCreateDto {
   @ApiProperty({ description: 'Email', example: 'consumidor@irango.com' })
   readonly email: string
 
-  @ApiProperty({ description: 'Email', example: 'consumidor@irango.com' })
+  @ApiProperty({ description: 'Senha', example: 'Deve conter no minimo 8 caracters' })
   readonly password: string
 }

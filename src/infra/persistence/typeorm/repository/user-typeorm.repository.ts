@@ -16,15 +16,14 @@ export default class UserTypeormRepository implements IUserRepository {
   ) {}
 
   async create (input: User): Promise<User> {
-    await this.repository.insert({
+    const user =  await this.repository.save({
       cpf: input.cpf.toString(),
       email: input.email.toString(),
       name: input.name.toString(),
       password: input.password.value,
       salt: input.password.salt,
     })
-
-    return input
+    return User.buildExistingUsuario(user.id, user.name, user.email, user.cpf, user.password, user.salt)
   }
 
   async findByEmail (email: Email): Promise<User | undefined> {
