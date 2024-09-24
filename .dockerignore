@@ -13,3 +13,4 @@ commitlint.config.js
 .env.example
 .env.local.example
 .dockerignore
+node_modules
