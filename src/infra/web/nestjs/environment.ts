@@ -21,7 +21,7 @@ export class Environment {
   }
 
   static get DB_HOSTNAME () {
-    return process.env.DB_HOSTNAME || 'localhost'
+    return process.env.DB_HOSTNAME || 'local-mysql'
   }
 
   static get DB_PORT (): number {
