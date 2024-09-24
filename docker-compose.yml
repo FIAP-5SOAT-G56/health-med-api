@@ -1,4 +1,4 @@
-version: '2.2'
+version: '3.4'
 services:
   health-med-api:
     container_name: health-med-api
@@ -11,6 +11,8 @@ services:
     build:
       dockerfile: ./Dockerfile
       context: .
+      target: development
+
     ports:
       - 3001:3001
     volumes:
