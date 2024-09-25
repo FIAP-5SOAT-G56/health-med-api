@@ -1,6 +1,7 @@
 version: '3.4'
 services:
   health-med-api:
+    image: health-med-api
     container_name: health-med-api
     cpus: 2
     mem_limit: 2000m
@@ -12,11 +13,12 @@ services:
       dockerfile: ./Dockerfile
       context: .
       target: development
-
+    command: sh -c "pnpm install && pnpm start:dev"
     ports:
       - 3001:3001
     volumes:
       - .:/app # to sync code changes
+    working_dir: '/app'
     healthcheck:
       test: ["CMD", "curl", "-f", "http://127.0.0.1:3001/health-check"]
       interval: 1m30s
