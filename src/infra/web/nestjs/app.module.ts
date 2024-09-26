@@ -16,6 +16,10 @@ import {PatientsModule} from '@/infra/web/nestjs/patient/patient.module'
 import {AgendaModule} from '@/infra/web/nestjs/agenda/agenda.module'
 import { SqsModule } from '@ssut/nestjs-sqs'
 
+import { AuthGuard } from './decorators/auth.guard'
+import { RolesGuard } from './decorators/roles.guard'
+import { APP_GUARD } from '@nestjs/core'
+
 export const appModules = [
   UsersModule,
   DoctorsModule,
@@ -38,7 +42,16 @@ export const appModules = [
     AppController
   ],
   providers: [
-    AppCache
+    AppCache,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  
   ],
   exports: [
     AppCache

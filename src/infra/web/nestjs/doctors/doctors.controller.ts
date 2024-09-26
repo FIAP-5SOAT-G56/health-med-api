@@ -16,6 +16,7 @@ import IUserRepository, { IUserRepository as IUserRepositorySymbol }  from '@/co
 import { Gateway } from '@/core/operation/gateway/gateway'
 import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
 import { MedicoGateway } from '@/core/operation/gateway/medico.gateway'
+import { Public } from '../decorators/auth.guard'
 
 @Controller('v1/doctors')
 @ApiTags('v1/doctors')
@@ -27,6 +28,7 @@ export  class DoctorsController {
   ) {}
 
   @Post()
+  @Public()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Criar Médico' })
   @ApiBody({ type: DoctorRequest })

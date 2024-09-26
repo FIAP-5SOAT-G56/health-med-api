@@ -6,6 +6,7 @@ import SignUpRequest from '@/infra/web/nestjs/users/dto/signup.request'
 import SignInUseCase from '@/core/application/usecase/user/sign-in.use-case'
 import { JwtService } from '@/core/domain/service/jtw-service'
 import { JwtDto } from '@/core/domain/dto/output/jwt.dto'
+import { PacienteGateway } from '../gateway/paciente.gateway'
 
 export class UsuarioController {
   constructor (
@@ -23,10 +24,11 @@ export class UsuarioController {
     return usuario;
   }
 
-  async signIn(input: SignUpRequest, jwtService: JwtService): Promise<JwtDto> {
+  async signIn(input: SignUpRequest, jwtService: JwtService,  patientGateway: PacienteGateway): Promise<JwtDto> {
     const useCase = new SignInUseCase(
       this.gateway,
-      jwtService
+      patientGateway,
+      jwtService,
     );
 
     const jtw = await useCase.handle(input)

@@ -28,8 +28,6 @@ export default class CreateUsuarioUseCase {
       input.password,
     );
 
-    await this.gateway.usuario.create(usuarioCriado)
-
-    return usuarioCriado
+    return  this.gateway.usuario.create(usuarioCriado)
   }
 }

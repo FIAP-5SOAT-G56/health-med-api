@@ -93,7 +93,7 @@ describe('Test for static methods of Environment class', () => {
 
   it('test get DB_DATABASE method default value', () => {
     delete process.env.DB_DATABASE
-    expect(Environment.DB_DATABASE).toEqual('irango_order')
+    expect(Environment.DB_DATABASE).toEqual('health_med')
   })
 
   it('test get DB_CONNECTION_LIMIT method', () => {

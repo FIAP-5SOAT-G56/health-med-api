@@ -37,7 +37,7 @@ export class Environment {
   }
 
   static get DB_DATABASE () {
-    return process.env.DB_DATABASE || 'irango_order'
+    return process.env.DB_DATABASE || 'health_med'
   }
 
   static get DB_CONNECTION_LIMIT (): number {

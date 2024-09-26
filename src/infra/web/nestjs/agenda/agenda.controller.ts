@@ -6,9 +6,10 @@ import {
     HttpStatus,
     Inject,
     Post,
-    Patch
+    Patch,
+    UseGuards
   } from '@nestjs/common'
-  import { ApiBody, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+  import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger'
   
   import { AgendaController } from '@/core/operation/controllers/agenda.controller'
   import AgendaResponse from './dto/agenda.response'
@@ -19,7 +20,14 @@ import {
   import IAgendaRepository, { IAgendaRepository as IAgendaRepositorySymbol } from '@/core/domain/repositories/iagenda.repository'
   import { AgendaGateway } from '@/core/operation/gateway/agenda.gateway'
   import { MedicoGateway } from '@/core/operation/gateway/medico.gateway'
+  import { AuthGuard } from '../decorators/auth.guard'
+import { ProfileTypeEnum } from '@/core/domain/enums/profile-status.enum'
+import { Roles } from '../decorators/roles.decorator'
+import { RolesGuard } from '../decorators/roles.guard'
+import { User } from '../decorators/user.decorator'
+import { UserEntity } from '../entities/user.entities'
   
+  @UseGuards(AuthGuard)
   @Controller('v1/agenda')
   @ApiTags('v1/agenda')
   export  class AgendController {
@@ -29,7 +37,9 @@ import {
     ) {}
   
     @Post()
+    @ApiBearerAuth()
     @HttpCode(HttpStatus.CREATED)
+    @Roles(ProfileTypeEnum.MEDICO)
     @ApiOperation({ summary: 'Criar Agenda' })
     @ApiBody({ type: CreateAgendaRequest })
     @ApiCreatedResponse({ description: 'Registro criado', type: AgendaResponse })
@@ -53,7 +63,10 @@ import {
     }
 
     @Patch()
+    @ApiBearerAuth()
     @HttpCode(HttpStatus.OK)
+    @Roles(ProfileTypeEnum.MEDICO)
+    @UseGuards(RolesGuard)
     @ApiOperation({ summary: 'Atualizar Agenda' })
     @ApiBody({ type: AgendaMedicoUpdateDto })
     @ApiCreatedResponse({ description: 'Registro criado', type: AgendaResponse })
@@ -87,18 +100,24 @@ import {
     }
 
     @Patch('consulta')
+    @ApiBearerAuth('authorization')
+    @ApiHeader({
+      name: 'authorization'
+    })
     @HttpCode(HttpStatus.FOUND)
     @ApiOperation({ summary: 'Agendar Consulta' })
+    @Roles(ProfileTypeEnum.PACIENTE)
     @ApiBody({ type: ConsultaPacienteRequest })
     @ApiCreatedResponse({ description: 'Registro criado', type: AgendaResponse })
     async schedule (
-      @Body() input: ConsultaPacienteRequest
+      @Body() input: ConsultaPacienteRequest,
+      @User() user: UserEntity
     ): Promise<AgendaResponse> {
   
       const gateway = new AgendaGateway(this.repository)
       const doctorGateway = new MedicoGateway(this.doctorRepository)
       const controller = new AgendaController(gateway, doctorGateway)
-      const output = await controller.schedule(input)
+      const output = await controller.schedule({...input, pacienteId: user.getKeyPatient()})
       
       if(!output.id) {
         throw new HttpException(

@@ -4,6 +4,7 @@ import Name from '../value-object/Name';
 import Cpf from '../value-object/Cpf';
 import { ProfileTypeEnum } from '../enums/profile-status.enum';
 import Perfil from './perfil';
+import { randomUUID } from 'crypto';
 
 export default class Usuario {
   private constructor(
@@ -13,7 +14,6 @@ export default class Usuario {
     readonly cpf: Cpf,
     readonly password: Password,
     readonly perfis: Perfil[],
-
   ) {
   }
 
@@ -23,11 +23,15 @@ export default class Usuario {
       new Name(name),
       new Email(email),
       new Cpf(cpf),
-      await Password.create(password, 'salt'),
+      await Password.create(password, randomUUID()),
       []
     );
   }
 
+  getId(): number {
+    return this.id ?? 0
+  }
+  
   static async buildExistingUsuario(
     userId: number,
     name: string,

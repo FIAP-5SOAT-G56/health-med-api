@@ -16,6 +16,7 @@ import {
   import { PatientGateway } from '@/core/operation/gateway/patient.gateway'
   import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
   import { PacienteGateway } from '@/core/operation/gateway/paciente.gateway'
+import { Public } from '../decorators/auth.guard'
   
   @Controller('v1/patients')
   @ApiTags('v1/patients')
@@ -23,10 +24,10 @@ import {
     constructor (
       @Inject(IPacienteRepositorySymbol) private readonly repository: IPacienteRepository,
       @Inject(IUserRepositorySymbol) private readonly userRepository: IUserRepository,
-  
     ) {}
   
     @Post()
+    @Public()
     @HttpCode(HttpStatus.CREATED)
     @ApiOperation({ summary: 'Criar Paciente' })
     @ApiBody({ type: PatientRequest })

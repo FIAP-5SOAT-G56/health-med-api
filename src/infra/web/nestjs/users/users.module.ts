@@ -10,10 +10,13 @@ import DoctorTypeormRepository from '@/infra/persistence/typeorm/repository/doct
 import { JwtNestService } from '@/infra/service/jwt.nest.service'
 import { JwtModule } from '@nestjs/jwt'
 import { Environment } from '../environment'
+import { IPacienteRepository } from '@/core/domain/repositories/ipaciente.repository'
+import PatientTypeormRepository from '@/infra/persistence/typeorm/repository/patient-typeorm.repository'
+import { Patient } from '@/infra/persistence/typeorm/entities/patient'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Doctor]),
+    TypeOrmModule.forFeature([User, Doctor,Patient]),
     JwtModule.register({
       global: true,
       secret: Environment.SECRET,
@@ -23,8 +26,8 @@ import { Environment } from '../environment'
   providers: [
     { provide: IUserRepository, useClass: UserTypeormRepository },
     { provide: IMedicoRepository, useClass: DoctorTypeormRepository },
+    { provide: IPacienteRepository, useClass: PatientTypeormRepository },
     JwtNestService,
-
   ],
   controllers: [
     UsersController
