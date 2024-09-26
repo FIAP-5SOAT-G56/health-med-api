@@ -35,11 +35,7 @@ Install project dependencies with:
 pnpm install
 ```
 
-* Create MySQL and Redis databases or start [fiap-irango-database/docker-compose.yml](https://github.com/FIAP-Tech-Challenge-53/fiap-irango-database/blob/main/docker-compose.yml) file.
 
-* Start [fiap-irango-payment-api](https://github.com/FIAP-Tech-Challenge-53/fiap-irango-payment-api) service. It can be run after fiap-irango-order-api starts.
-
-* Start [fiap-irango-cook-api](https://github.com/FIAP-Tech-Challenge-53/fiap-irango-cook-api) service. It can be run after fiap-irango-order-api starts.
 
 ## Start Project using Docker
 Configure all docker containers and volumes and start the application

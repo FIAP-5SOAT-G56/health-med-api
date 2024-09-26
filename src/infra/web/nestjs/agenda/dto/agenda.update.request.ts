@@ -7,8 +7,8 @@ export default class UpdateAgendaRequest implements AgendaMedicoUpdateDto {
     readonly agendaId: number
 
     @ApiProperty({ description: 'Inicio Data/Hora da Consulta Novo', example: '13-08-2024/08:00:00' })
-    readonly new_startAt: string
+    readonly startAt: Date
 
     @ApiProperty({ description: 'Término Data/Hora da Consulta Novo', example: '13-08-2024/10:00:00' })
-    readonly new_endAt: string
+    readonly endAt: Date
 }

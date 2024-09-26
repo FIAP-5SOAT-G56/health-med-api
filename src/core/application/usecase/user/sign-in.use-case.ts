@@ -40,7 +40,7 @@ export default class SignInUseCase {
       profiles[ProfileTypeEnum.PACIENTE] = [patient.getId().toString()]
     }
 
-    const payload = { sub: user.id, email: user.email.toString(), profiles }
+    const payload = { sub: user.id,name: user.name.toString(), email: user.email.toString(), profiles }
 
     return {
       access_token: await this.jwtService.signAsync(payload),

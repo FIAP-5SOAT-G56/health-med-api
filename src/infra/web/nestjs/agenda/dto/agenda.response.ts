@@ -14,8 +14,8 @@ export default class AgendaResponse {
   readonly liberada: boolean
 
   @ApiProperty({ description: 'Inicio Data/Hora da Consulta' })
-  readonly startAt: string
+  readonly startAt: Date
 
   @ApiProperty({ description: 'Término Data/Hora da Consulta' })
-  readonly endAt: string
+  readonly endAt: Date
 }

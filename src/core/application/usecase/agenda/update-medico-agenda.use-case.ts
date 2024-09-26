@@ -15,7 +15,7 @@ export default class UpdateMedicoAgendaUseCase {
       throw new BusinessException('Agenda não registrada.')
     }
 
-    const updateAgenda = Agenda.create(agenda.doctorId, agenda.liberado, input.new_startAt, input.new_endAt, agenda.id, agenda.pacienteId)
+    const updateAgenda = Agenda.create(agenda.doctorId, agenda.liberado, input.startAt, input.endAt, agenda.id, agenda.pacienteId)
 
     return await this.gateway.update(updateAgenda)
   }

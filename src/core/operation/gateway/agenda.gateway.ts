@@ -1,4 +1,5 @@
 import Agenda from '@/core/domain/entities/agenda'
+import { Agendas } from '@/core/domain/entities/agendas'
 import Repository from '@/core/domain/repositories/iagenda.repository'
 
 export class AgendaGateway {
@@ -18,5 +19,9 @@ export class AgendaGateway {
 
   findById (agendaId: number): Promise<Agenda | undefined> {
     return this.repository.findById(agendaId)
+  }
+
+  creates(agendas: Agendas): Promise<void> {
+    return this.repository.creates(agendas)
   }
 }

@@ -6,6 +6,7 @@ import { Repository } from 'typeorm'
 import Agenda from '@/core/domain/entities/agenda'
 import IAgendaRepository from '@/core/domain/repositories/iagenda.repository'
 import { Agenda as Entity } from '@/infra/persistence/typeorm/entities/agenda'
+import { Agendas } from '@/core/domain/entities/agendas'
 
 @Injectable()
 export default class AgendaTypeormRepository implements IAgendaRepository {
@@ -22,7 +23,7 @@ export default class AgendaTypeormRepository implements IAgendaRepository {
       endAt: new Date(input.endAt)
     })
 
-    return Agenda.create(data.doctorId, data.liberada, data.startAt.toDateString(), data.endAt.toDateString(), data.id, data.patient_id)
+    return Agenda.create(data.doctorId, data.liberada, data.startAt, data.endAt, data.id, data.patient_id)
   }
 
   async save (input: Agenda): Promise<Agenda> {
@@ -35,7 +36,7 @@ export default class AgendaTypeormRepository implements IAgendaRepository {
       endAt: new Date(input.endAt)
     })
 
-    return Agenda.create(data.doctorId, data.liberada, data.startAt.toDateString(), data.endAt.toDateString(), data.id, data.patientId)
+    return Agenda.create(data.doctorId, data.liberada, data.startAt, data.endAt, data.id, data.patientId)
   }
 
   async findByDoctor (doctorId: number): Promise<Agenda | undefined> {
@@ -43,7 +44,7 @@ export default class AgendaTypeormRepository implements IAgendaRepository {
       doctorId
     })
 
-    return agenda ? Agenda.create(agenda.doctorId, agenda.liberada, agenda.startAt.toDateString(), agenda.endAt.toDateString(), agenda.id, agenda.patientId) : undefined
+    return agenda ? Agenda.create(agenda.doctorId, agenda.liberada, agenda.startAt, agenda.endAt, agenda.id, agenda.patientId) : undefined
   }
 
   async findById (agendaId: number): Promise<Agenda | undefined> {
@@ -51,6 +52,10 @@ export default class AgendaTypeormRepository implements IAgendaRepository {
       id: agendaId
     })
 
-    return agenda ? Agenda.create(agenda.doctorId, agenda.liberada, agenda.startAt.toDateString(), agenda.endAt.toDateString(), agenda.id, agenda.patientId) : undefined
+    return agenda ? Agenda.create(agenda.doctorId, agenda.liberada, agenda.startAt, agenda.endAt, agenda.id, agenda.patientId) : undefined
+  }
+
+  async creates(agendas: Agendas): Promise<void> {
+   await this.repository.save(agendas.get())
   }
 }
