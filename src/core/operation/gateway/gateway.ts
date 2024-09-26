@@ -1,5 +1,5 @@
-import { UsuarioGateway } from './usuario.gateway'
 import { MedicoGateway } from './medico.gateway'
+import { UsuarioGateway } from './usuario.gateway'
 
 export class Gateway {
   constructor (

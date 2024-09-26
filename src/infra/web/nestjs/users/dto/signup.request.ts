@@ -1,8 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 
-
-export default class SignUpRequest  {
-
+export default class SignUpRequest {
   @ApiProperty({ description: 'Email', example: 'consumidor@irango.com' })
   readonly email: string
 

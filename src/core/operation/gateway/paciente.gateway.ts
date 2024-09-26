@@ -9,7 +9,7 @@ export class PacienteGateway {
     return this.respository.create(input)
   }
 
-  findByUserId(userId: number): Promise<Paciente | undefined> {
+  findByUserId (userId: number): Promise<Paciente | undefined> {
     return this.respository.findByUserId(userId)
   }
 }

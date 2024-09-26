@@ -1,5 +1,4 @@
 export default interface AgendaConsultaPacienteDto {
-    readonly agendaId: number;
-    readonly pacienteId: number;
+  readonly agendaId: number;
+  readonly pacienteId: number;
 }
-  

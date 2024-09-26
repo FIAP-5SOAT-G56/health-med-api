@@ -8,21 +8,20 @@ import {
 } from '@nestjs/common'
 import { ApiBody, ApiCreatedResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
-import ConsumidorResponse from './dto/user.response'
-import {CreateUserRequest} from './dto/create-user.request'
-import { UsuarioController } from '@/core/operation/controllers/usuario.controller'
-import UserResponse from './dto/user.response'
-import SignUpRequest from './dto/signup.request'
-
 import IMedicoRepository, { IMedicoRepository as IMedicoRepositorySymbol } from '@/core/domain/repositories/imedico.repository'
-import IUserRepository, { IUserRepository as IUserRepositorySymbol }  from '@/core/domain/repositories/iusuario.repository'
-import { Gateway } from '@/core/operation/gateway/gateway'
-import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
-import { MedicoGateway } from '@/core/operation/gateway/medico.gateway'
-import { JwtNestService } from '@/infra/service/jwt.nest.service'
 import IPacienteRepository, { IPacienteRepository as IPacienteRepositorySymbol } from '@/core/domain/repositories/ipaciente.repository'
+import IUserRepository, { IUserRepository as IUserRepositorySymbol } from '@/core/domain/repositories/iusuario.repository'
+import { UsuarioController } from '@/core/operation/controllers/usuario.controller'
+import { Gateway } from '@/core/operation/gateway/gateway'
+import { MedicoGateway } from '@/core/operation/gateway/medico.gateway'
 import { PacienteGateway } from '@/core/operation/gateway/paciente.gateway'
+import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
+import { JwtNestService } from '@/infra/service/jwt.nest.service'
+
 import { Public } from '../decorators/auth.guard'
+import { CreateUserRequest } from './dto/create-user.request'
+import SignUpRequest from './dto/signup.request'
+import UserResponse from './dto/user.response'
 
 @Controller('v1/users')
 @ApiTags('v1/users')
@@ -39,32 +38,32 @@ export class UsersController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Criar um novo Usuario' })
   @ApiBody({ type: CreateUserRequest })
-  @ApiCreatedResponse({ description: 'usuario criado', type: ConsumidorResponse })
+  @ApiCreatedResponse({ description: 'usuario criado', type: UserResponse })
   async signUp (
     @Body() input: CreateUserRequest
   ): Promise<UserResponse> {
     const gateway = new Gateway(new UsuarioGateway(this.userRepository), new MedicoGateway(this.repository))
     const controller = new UsuarioController(gateway)
-    const user = await controller.create(input);
+    const user = await controller.create(input)
     return {
-        id: user.id ?? 0,
-        name: user.name.toString(),
-        email: user.email.toString(),
-        cpf: user.cpf.toString()
+      id: user.id ?? 0,
+      name: user.name.toString(),
+      email: user.email.toString(),
+      cpf: user.cpf.toString()
     }
   }
 
   @Public()
   @HttpCode(HttpStatus.OK)
-  @Post("login")
-  @ApiOperation({ summary: "User Login" })
+  @Post('login')
+  @ApiOperation({ summary: 'User Login' })
   @ApiResponse({
     status: 200,
-    description: "The record found",
+    description: 'The record found',
     type: [UserResponse],
   })
   @ApiBody({ type: SignUpRequest })
-  signIn(@Body() input: SignUpRequest) {
+  signIn (@Body() input: SignUpRequest) {
     const gateway = new Gateway(new UsuarioGateway(this.userRepository), new MedicoGateway(this.repository))
 
     const controller = new UsuarioController(gateway)

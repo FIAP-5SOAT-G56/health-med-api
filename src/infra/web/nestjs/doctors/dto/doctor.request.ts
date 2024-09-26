@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 
-
-export default class DoctorRequest  {
+export default class DoctorRequest {
   @ApiProperty({ description: 'Crm', example: '1132156465' })
   readonly crm: string
 

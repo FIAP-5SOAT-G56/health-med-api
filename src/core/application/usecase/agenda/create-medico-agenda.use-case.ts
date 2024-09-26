@@ -11,15 +11,14 @@ export default class CreateMedicoAgendaUseCase {
   ) {}
 
   async handle (input: AgendaMedicoCreateDto): Promise<Agenda> {
-
-    const doctor = await this.doctorGateway.findByCrm(input.crm);
+    const doctor = await this.doctorGateway.findByCrm(input.crm)
 
     if (!doctor || doctor.id == undefined) {
       throw new BusinessException('Médico não Registrado.')
     }
 
-    let agenda = Agenda.create(doctor.id, true, input.start_datetime, input.end_datetime);
+    const agenda = Agenda.create(doctor.id, true, input.startAt, input.endAt)
 
-    return await this.gateway.create(agenda);
+    return await this.gateway.create(agenda)
   }
 }

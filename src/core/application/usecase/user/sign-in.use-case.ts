@@ -9,7 +9,7 @@ import { PacienteGateway } from '@/core/operation/gateway/paciente.gateway'
 
 type Profiles = {
   [key: string]: string[];
-};
+}
 
 export default class SignInUseCase {
   constructor (
@@ -27,23 +27,23 @@ export default class SignInUseCase {
     if (!user.password.validate(input.password)) {
       throw new BusinessException('Invalid')
     }
-    const profiles: Profiles = {};
+    const profiles: Profiles = {}
     const doctor = await this.gateway.medico.findByUserId(user.getId())
 
     if (doctor) {
-      profiles[ProfileTypeEnum.MEDICO] = [doctor.crm];
+      profiles[ProfileTypeEnum.MEDICO] = [doctor.crm]
     }
 
     const patient = await this.patientGateway.findByUserId(user.getId())
 
     if (patient) {
-      profiles[ProfileTypeEnum.PACIENTE] = [patient.id?.toString() ?? ''];
+      profiles[ProfileTypeEnum.PACIENTE] = [patient.getId().toString()]
     }
 
-    const payload = { sub: user.id, email: user.email.toString(), profiles };
+    const payload = { sub: user.id, email: user.email.toString(), profiles }
 
     return {
       access_token: await this.jwtService.signAsync(payload),
-    };
+    }
   }
 }

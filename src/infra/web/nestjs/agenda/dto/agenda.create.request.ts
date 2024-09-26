@@ -7,8 +7,8 @@ export default class CreateAgendaRequest implements AgendaCreateDto {
     readonly crm: string
 
     @ApiProperty({ description: 'Inicio Data/Hora da Consulta', example: '12-08-2024/08:00:00' })
-    readonly start_datetime: string
+    readonly startAt: string
 
     @ApiProperty({ description: 'Término Data/Hora da Consulta', example: '12-08-2024/10:00:00' })
-    readonly end_datetime: string
+    readonly endAt: string
 }

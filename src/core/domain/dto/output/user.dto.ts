@@ -1,5 +1,4 @@
 
-
 export default interface PassWordDto {
   readonly id: number;
   readonly name: number;

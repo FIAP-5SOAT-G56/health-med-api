@@ -9,15 +9,14 @@ export default class UpdateMedicoAgendaUseCase {
   ) {}
 
   async handle (input: AgendaMedicoUpdateDto): Promise<Agenda> {
-
     const agenda = await this.gateway.findById(input.agendaId)
-    
+
     if (!agenda) {
       throw new BusinessException('Agenda não registrada.')
     }
 
-    let update_agenda = Agenda.create(agenda.doctorId, agenda.liberado, input.new_start_datetime, input.new_end_datetime, agenda.id, agenda.pacienteId);
-    
-    return await this.gateway.update(update_agenda)
+    const updateAgenda = Agenda.create(agenda.doctorId, agenda.liberado, input.new_startAt, input.new_endAt, agenda.id, agenda.pacienteId)
+
+    return await this.gateway.update(updateAgenda)
   }
 }

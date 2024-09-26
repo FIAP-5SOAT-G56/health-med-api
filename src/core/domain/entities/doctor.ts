@@ -13,4 +13,7 @@ export default class Medico {
     return new Medico(undefined, userId, crm)
   }
 
+  getId (): number {
+    return this.id ?? 0
+  }
 }

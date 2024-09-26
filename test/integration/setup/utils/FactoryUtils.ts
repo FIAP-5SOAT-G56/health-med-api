@@ -7,9 +7,9 @@ import { DataSource, ObjectLiteral, Repository } from 'typeorm'
 
 import { PedidoStatusEnum } from '@/core/domain/enums/pedido-status.enum'
 import { ProdutoCategoriaEnum } from '@/core/domain/enums/produto-categoria.enum'
-import { Consumidor } from '@/infra/persistence/typeorm/entities/user'
 import { Pedido } from '@/infra/persistence/typeorm/entities/pedido'
 import { Produto } from '@/infra/persistence/typeorm/entities/produto'
+import { Consumidor } from '@/infra/persistence/typeorm/entities/user'
 
 type IConstructable<T> = new () => T
 

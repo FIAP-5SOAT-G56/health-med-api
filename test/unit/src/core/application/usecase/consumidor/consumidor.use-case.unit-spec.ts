@@ -1,6 +1,6 @@
 import ConsumidorUseCase from '@/core/application/usecase/medico/medico.use-case'
-import ConsumidorCreateDto from '@/core/domain/dto/input/medico-create.dto'
 import ConsumidorUpdateDto from '@/core/domain/dto/input/consumidor-update.dto'
+import ConsumidorCreateDto from '@/core/domain/dto/input/medico-create.dto'
 import Consumidor from '@/core/domain/entities/doctor'
 import BusinessException from '@/core/domain/errors/business-exception'
 import Repository from '@/core/domain/repositories/iconsumidor.repository'

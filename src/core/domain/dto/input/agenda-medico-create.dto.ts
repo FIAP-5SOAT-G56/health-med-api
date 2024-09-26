@@ -1,6 +1,5 @@
 export default interface AgendaMedicoCreateDto {
-    readonly crm: string;
-    readonly start_datetime: string;
-    readonly end_datetime: string;
+  readonly crm: string;
+  readonly startAt: string;
+  readonly endAt: string;
 }
-  

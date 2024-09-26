@@ -1,13 +1,14 @@
-import Password from '../value-object/Password';
-import Email from '../value-object/email';
-import Name from '../value-object/Name';
-import Cpf from '../value-object/Cpf';
-import { ProfileTypeEnum } from '../enums/profile-status.enum';
-import Perfil from './perfil';
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'crypto'
+
+import { ProfileTypeEnum } from '../enums/profile-status.enum'
+import Cpf from '../value-object/Cpf'
+import Email from '../value-object/email'
+import Name from '../value-object/Name'
+import Password from '../value-object/Password'
+import Perfil from './perfil'
 
 export default class Usuario {
-  private constructor(
+  private constructor (
     readonly id: number | undefined,
     readonly name: Name,
     readonly email: Email,
@@ -17,7 +18,7 @@ export default class Usuario {
   ) {
   }
 
-  static async create(name: string, email: string,cpf: string, password: string) {
+  static async create (name: string, email: string, cpf: string, password: string) {
     return new Usuario(
       undefined,
       new Name(name),
@@ -25,14 +26,14 @@ export default class Usuario {
       new Cpf(cpf),
       await Password.create(password, randomUUID()),
       []
-    );
+    )
   }
 
-  getId(): number {
+  getId (): number {
     return this.id ?? 0
   }
-  
-  static async buildExistingUsuario(
+
+  static async buildExistingUsuario (
     userId: number,
     name: string,
     email: string,
@@ -47,14 +48,14 @@ export default class Usuario {
       new Cpf(cpf),
       new Password(hashPassword, salt),
       [],
-    );
+    )
   }
 
-  async validatePassword(password: string) {
-    return this.password.validate(password);
+  async validatePassword (password: string) {
+    return this.password.validate(password)
   }
 
-  addProfile(type: ProfileTypeEnum, code: string | undefined) {
+  addProfile (type: ProfileTypeEnum, code: string | undefined) {
     const profile = Perfil.create(type, code)
     this.perfis.push(profile)
   }

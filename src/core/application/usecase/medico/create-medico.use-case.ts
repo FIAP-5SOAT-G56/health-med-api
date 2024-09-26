@@ -18,10 +18,10 @@ export default class CreateMedicoUseCase {
     const medico = Medico.create(
       input.userId,
       input.crm
-    );
+    )
 
     usuario.addProfile(ProfileTypeEnum.MEDICO, input.crm)
-    const findDoctor = await this.gateway.medico.findByUserId(usuario.getId());
+    const findDoctor = await this.gateway.medico.findByUserId(usuario.getId())
 
     if (findDoctor) {
       throw new BusinessException('Médico já cadastrado')

@@ -17,7 +17,7 @@ export default class CreateMedicoUseCase {
 
     const paciente = Paciente.create(
       input.userId
-    );
+    )
 
     usuario.addProfile(ProfileTypeEnum.PACIENTE, undefined)
 

@@ -1,7 +1,8 @@
 import Create from '@/core/application/usecase/medico/create-medico.use-case'
-import { Gateway } from '../gateway/gateway'
 import MedicoCreateDto from '@/core/domain/dto/input/medico-create.dto'
 import Medico from '@/core/domain/entities/doctor'
+
+import { Gateway } from '../gateway/gateway'
 
 export class MedicoController {
   constructor (
@@ -12,11 +13,11 @@ export class MedicoController {
     input: MedicoCreateDto
   ): Promise<Medico> {
     const useCase = new Create(
-     this.gateway
+      this.gateway
     )
 
     const doctor = await useCase.handle(input)
 
-    return doctor;
+    return doctor
   }
 }

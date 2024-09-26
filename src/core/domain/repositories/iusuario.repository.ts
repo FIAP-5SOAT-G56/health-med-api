@@ -1,6 +1,7 @@
 import User from '@/core/domain/entities/usuario'
-import Email from '../value-object/email';
-import Cpf from '../value-object/Cpf';
+
+import Cpf from '../value-object/Cpf'
+import Email from '../value-object/email'
 
 export default interface IUserRepository {
   create(input: User): Promise<User>;
