@@ -13,12 +13,14 @@ import AppController from '@/infra/web/nestjs/app.controller'
 import {UsersModule} from '@/infra/web/nestjs/users/users.module'
 import {DoctorsModule} from '@/infra/web/nestjs/doctors/doctors.module'
 import {PatientsModule} from '@/infra/web/nestjs/patient/patient.module'
+import {AgendaModule} from '@/infra/web/nestjs/agenda/agenda.module'
 import { SqsModule } from '@ssut/nestjs-sqs'
 
 export const appModules = [
   UsersModule,
   DoctorsModule,
-  PatientsModule
+  PatientsModule,
+  AgendaModule
 ]
 
 @Global()
