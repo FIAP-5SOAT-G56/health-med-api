@@ -1,6 +1,7 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 
 import { User } from './user'
+import { Agenda } from './agenda'
 
 @Entity('doctors')
 export class Doctor {
@@ -26,4 +27,7 @@ export class Doctor {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt?: Date
+
+  @OneToMany(() => Agenda, user => user.doctor)
+  public agendas: Agenda[]
 }

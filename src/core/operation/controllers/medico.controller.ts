@@ -3,6 +3,8 @@ import MedicoCreateDto from '@/core/domain/dto/input/medico-create.dto'
 import Medico from '@/core/domain/entities/doctor'
 
 import { Gateway } from '../gateway/gateway'
+import { CreateDoctorWithUserUseCase } from '@/core/application/usecase/medico/create-doctor-with-user.use-case'
+import DoctorWithCreateDto from '@/core/domain/dto/input/doctor-with-user-create.dto'
 
 export class MedicoController {
   constructor (
@@ -17,7 +19,17 @@ export class MedicoController {
     )
 
     const doctor = await useCase.handle(input)
+    return doctor
+  }
 
+  async createDoctorWithUser (
+    input: DoctorWithCreateDto
+  ): Promise<Medico> {
+    const useCase = new CreateDoctorWithUserUseCase(
+      this.gateway
+    )
+
+    const doctor = await useCase.handle(input)
     return doctor
   }
 }
