@@ -22,9 +22,8 @@ export class PageService {
     relations?: FindOptionsRelations<Entity>| undefined,
     select?: FindOptionsSelect<Entity>
   ) {
-
-    const page = filter?.page ?? 1;
-    const pageSize = filter?.pageSize ?? 10;
+    const page = filter.page ?? 1
+    const pageSize = filter.pageSize ?? 10
 
     return repository.findAndCount({
       order: this.createOrderQuery(filter),

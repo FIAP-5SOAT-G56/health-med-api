@@ -8,17 +8,19 @@ import {
   UseInterceptors,
 } from '@nestjs/common'
 import { ApiBody, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+
 import IPacienteRepository, { IPacienteRepository as IPacienteRepositorySymbol } from '@/core/domain/repositories/ipaciente.repository'
 import IUserRepository, { IUserRepository as IUserRepositorySymbol } from '@/core/domain/repositories/iusuario.repository'
 import { PacienteController } from '@/core/operation/controllers/paciente.controller'
 import { PacienteGateway } from '@/core/operation/gateway/paciente.gateway'
 import { PatientGateway } from '@/core/operation/gateway/patient.gateway'
 import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
+
 import { Public } from '../decorators/auth.guard'
 import { TransactionInterceptor } from '../interceptor/transaction-interceptor'
+import CreatePatientWithUserRequest from './dto/create-patient-with-user.request'
 import PatientRequest from './dto/create-patient.request'
 import PatientResponse from './dto/patient.response'
-import CreatePatientWithUserRequest from './dto/create-patient-with-user.request'
 
 @Controller('v1/patients')
 @ApiTags('v1/patients')
