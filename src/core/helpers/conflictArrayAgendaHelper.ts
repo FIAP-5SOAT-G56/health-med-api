@@ -4,6 +4,7 @@ export type TimeInterval = {
 }
 
 export function hasTimeConflicts (intervals: TimeInterval[]): boolean {
+  console.log(intervals)
   // Step 1: Sort the intervals by startAt
   const sortedIntervals = intervals.sort((a, b) => a.startAt.getTime() - b.startAt.getTime())
 

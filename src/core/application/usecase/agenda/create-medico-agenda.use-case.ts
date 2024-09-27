@@ -13,7 +13,7 @@ export default class CreateMedicoAgendaUseCase {
   async handle (input: AgendaMedicoCreateDto): Promise<Agenda> {
     const doctor = await this.doctorGateway.findByCrm(input.crm)
 
-    if (!doctor || doctor.id == undefined) {
+    if (!doctor || doctor.id === undefined) {
       throw new BusinessException('Médico não Registrado.')
     }
 

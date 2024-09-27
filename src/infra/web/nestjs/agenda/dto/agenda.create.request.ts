@@ -12,3 +12,4 @@ export default class CreateAgendaRequest implements AgendaCreateDto {
     @ApiProperty({ description: 'Término Data/Hora da Consulta', example: '12-08-2024/10:00:00' })
     readonly endAt: Date
 }
+

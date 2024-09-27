@@ -1,11 +1,13 @@
 import CreateConsultaPacienteUseCase from '@/core/application/usecase/agenda/create-consulta-paciente.use-case'
 import CreateMedicoAgendaUseCase from '@/core/application/usecase/agenda/create-medico-agenda.use-case'
+import CreateMedicoAgendasUseCase from '@/core/application/usecase/agenda/create-medico-agendas.use-case'
 import ListMedicoAgendaUseCase from '@/core/application/usecase/agenda/list-medico-agenda.use-case'
 import UpdateMedicoAgendaUseCase from '@/core/application/usecase/agenda/update-medico-agenda.use-case'
 import AgendaConsultaPacienteDto from '@/core/domain/dto/input/agenda-consulta-paciente.dto'
 import AgendaMedicoCreateDto from '@/core/domain/dto/input/agenda-medico-create.dto'
 import AgendaMedicoListDto from '@/core/domain/dto/input/agenda-medico-list.dto'
 import AgendaMedicoUpdateDto from '@/core/domain/dto/input/agenda-medico-update.dto'
+import AgendasMedicoCreateDto from '@/core/domain/dto/input/agendas-medico-create.dto'
 import Agenda from '@/core/domain/entities/agenda'
 import { ScheduleService } from '@/core/domain/service/schedule-service'
 
@@ -24,6 +26,14 @@ export class AgendaController {
     input: AgendaMedicoCreateDto
   ): Promise<Agenda> {
     const useCase = new CreateMedicoAgendaUseCase(this.gateway, this.doctorGateway)
+    const agenda = await useCase.handle(input)
+    return agenda
+  }
+
+  async createAgendas (
+    input: AgendasMedicoCreateDto
+  ): Promise<void> {
+    const useCase = new CreateMedicoAgendasUseCase(this.gateway, this.doctorGateway)
     const agenda = await useCase.handle(input)
     return agenda
   }

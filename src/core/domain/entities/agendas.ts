@@ -8,11 +8,11 @@ export class Agendas {
 
   public push (
     doctorId: number,
-    liberado: boolean,
+    liberada: boolean,
     startAt: Date,
     endAt: Date,
   ) {
-    const agendaNew = new Agenda(undefined, doctorId, undefined, liberado, startAt, endAt)
+    const agendaNew = new Agenda(undefined, doctorId, undefined, liberada, startAt, endAt)
 
     const exists = this.agendas.filter(agenda => {
       return !(agendaNew.startAt > agenda.startAt && agendaNew.startAt >= agenda.endAt ||

@@ -21,7 +21,7 @@ export default class UpdateMedicoAgendaUseCase {
       throw new BusinessException('Conflito de Horário.')
     }
 
-    const updateAgenda = Agenda.create(agenda.doctorId, agenda.liberado, input.startAt, input.endAt, agenda.id, agenda.pacienteId)
+    const updateAgenda = Agenda.create(agenda.doctorId, agenda.liberada, input.startAt, input.endAt, agenda.id, agenda.pacienteId)
 
     return await this.gateway.update(updateAgenda)
   }

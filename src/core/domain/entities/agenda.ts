@@ -5,7 +5,7 @@ export default class Agenda {
       public readonly id: number | undefined,
       public doctorId: number,
       public pacienteId: number | undefined,
-      public liberado: boolean,
+      public liberada: boolean,
       public startAt: Date,
       public endAt: Date,
     ) {
@@ -16,13 +16,13 @@ export default class Agenda {
 
   static create (
         doctorId: number,
-        liberado: boolean,
+        liberada: boolean,
         startAt: Date,
         endAt: Date,
         id?: number,
         pacienteId?: number,
     ): Agenda {
-    return new Agenda(id, doctorId, pacienteId, liberado, startAt, endAt)
+    return new Agenda(id, doctorId, pacienteId, liberada, startAt, endAt)
   }
 
   getDate (): string {

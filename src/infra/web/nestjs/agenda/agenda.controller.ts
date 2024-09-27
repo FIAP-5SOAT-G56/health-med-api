@@ -38,6 +38,7 @@ import CreateAgendaRequest from './dto/agenda.create.request'
 import { AgendaListResponse, AgendaListElem } from './dto/agenda.list.response'
 import AgendaResponse from './dto/agenda.response'
 import AgendaMedicoUpdateDto from './dto/agenda.update.request'
+import CreateAgendasRequest from './dto/agendas.create.request'
 import ConsultaPacienteRequest from './dto/consulta.paciente.create.request'
 
 const AGENDA_CACHE_KEY = (doctorId: number) => 'cache:agenda:doctorId=' + doctorId
@@ -79,10 +80,39 @@ export class AgendController {
       id: output.id,
       doctorId: output.doctorId,
       patientId: output.pacienteId,
-      liberada: output.liberado,
+      liberada: output.liberada,
       startAt: output.startAt,
       endAt: output.endAt
     }
+  }
+
+  @Post('list')
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.CREATED)
+  @Roles(ProfileTypeEnum.MEDICO)
+  @ApiOperation({ summary: 'Criar Agendas' })
+  @ApiBody({ type: CreateAgendasRequest })
+  @ApiCreatedResponse({ description: 'Registro criado', type: [AgendaResponse] })
+  async createAgendas (
+      @Body() input: CreateAgendasRequest,
+      @User() user: UserEntity
+
+    ): Promise<void> {
+    const gateway = new AgendaGateway(this.repository)
+    const doctorGateway = new MedicoGateway(this.doctorRepository)
+    const controller = new AgendaController(gateway, doctorGateway)
+
+    const dates = input.dates.map(date => {
+      return {
+        startAt: new Date(date.startAt),
+        endAt: new Date(date.endAt)
+
+      }
+    })
+    await controller.createAgendas({ crm: user.getKeyDoctor(), dates })
+
+    const doctor = await doctorGateway.findByCrm(user.getKeyDoctor())
+    await this.appCache.del(AGENDA_CACHE_KEY(doctor?.id ?? 0))
   }
 
   @Patch()
@@ -117,7 +147,7 @@ export class AgendController {
       id: output.id,
       doctorId: output.doctorId,
       patientId: output.pacienteId,
-      liberada: output.liberado,
+      liberada: output.liberada,
       startAt: output.startAt,
       endAt: output.endAt
     }
@@ -179,7 +209,7 @@ export class AgendController {
       id: output.id,
       doctorId: output.doctorId,
       patientId: output.pacienteId,
-      liberada: output.liberado,
+      liberada: output.liberada,
       startAt: output.startAt,
       endAt: output.endAt
     }
@@ -189,7 +219,7 @@ export class AgendController {
   @ApiHeader({
     name: 'authorization'
   })
-  @HttpCode(HttpStatus.FOUND)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Listar Agenda Médico' })
   @ApiCreatedResponse({ description: 'Agenda encontradas', type: AgendaListResponse })
   async list (@Param('id') id: number): Promise<AgendaListResponse> {
@@ -207,7 +237,7 @@ export class AgendController {
       doctorId: id
     })
 
-    if (output.length == 0) {
+    if (output.length === 0) {
       throw new HttpException(
         {
           status: HttpStatus.NOT_FOUND,
@@ -219,7 +249,7 @@ export class AgendController {
 
     const response = {
       doctorId: output[0].doctorId,
-      agenda: output.map(agenda => new AgendaListElem(agenda.liberado, agenda.startAt, agenda.endAt))
+      agenda: output.map(agenda => new AgendaListElem(agenda.liberada, agenda.startAt, agenda.endAt))
     }
 
     await this.appCache.set(AGENDA_CACHE_KEY(id), response, AGENDA_CACHE_TTL)

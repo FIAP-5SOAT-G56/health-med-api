@@ -10,4 +10,8 @@ export class UserEntity {
   getKeyPatient (): number {
     return this.profiles.PACIENTE[0] ? parseInt(this.profiles.PACIENTE[0]) : 0
   }
+
+  getKeyDoctor (): string {
+    return this.profiles.MEDICO[0] ?? ''
+  }
 }

@@ -21,7 +21,7 @@ export default class AgendaTypeormRepository implements IAgendaRepository {
     const data = await this.repository.save({
       doctorId: input.doctorId,
       patient_id: input.pacienteId,
-      liberada: input.liberado,
+      liberada: input.liberada ?? true,
       startAt: new Date(input.startAt),
       endAt: new Date(input.endAt)
     })
@@ -37,7 +37,7 @@ export default class AgendaTypeormRepository implements IAgendaRepository {
           id: input.id,
           doctorId: input.doctorId,
           patientId: input.pacienteId,
-          liberada: input.liberado,
+          liberada: input.liberada,
           startAt: new Date(input.startAt),
           endAt: new Date(input.endAt)
         })
@@ -49,7 +49,7 @@ export default class AgendaTypeormRepository implements IAgendaRepository {
       id: input.id,
       doctorId: input.doctorId,
       patientId: input.pacienteId,
-      liberada: input.liberado,
+      liberada: input.liberada,
       startAt: new Date(input.startAt),
       endAt: new Date(input.endAt)
     })
@@ -74,6 +74,7 @@ export default class AgendaTypeormRepository implements IAgendaRepository {
   }
 
   async creates (agendas: Agendas): Promise<void> {
+    console.log(agendas)
     await this.repository.save(agendas.get())
   }
 
