@@ -25,6 +25,12 @@ export default class CreateConsultaPacienteUseCase {
       throw new BusinessException('Horário Indisponível.')
     }
 
+    const conflict = await this.gateway.agendaPatientConflict(input.pacienteId, agenda.startAt, agenda.endAt)
+
+    if (conflict) {
+      throw new BusinessException('Conflito de Horário.')
+    }
+
     const updateAgenda = Agenda.create(agenda.doctorId, false, agenda.startAt, agenda.endAt, agenda.id, input.pacienteId)
 
     const agendaSave = await this.gateway.update(updateAgenda)

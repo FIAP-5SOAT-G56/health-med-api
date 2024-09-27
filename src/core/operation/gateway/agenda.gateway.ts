@@ -29,6 +29,10 @@ export class AgendaGateway {
     return this.repository.agendaConflict(doctorId, startAt, endAt)
   }
 
+  agendaPatientConflict(patientId: number, startAt: Date, endAt: Date): Promise<boolean> {
+    return this.repository.agendaPatientConflict(patientId, startAt, endAt);
+  }
+
   agendaUpdateConflict (agendaId: number, doctorId: number, startAt: Date, endAt: Date): Promise<boolean> {
     return this.repository.agendaUpdateConflict(agendaId, doctorId, startAt, endAt)
   }
