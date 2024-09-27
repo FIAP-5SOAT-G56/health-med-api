@@ -41,21 +41,21 @@ export default class CreateConsultaPacienteUseCase {
     }
 
     const userDoctor = await this.gateways.usuario.findById(doctor.userId)
-    const paciente = await this.pacienteGateway.findByUserId(input.pacienteId)
+    const paciente = await this.pacienteGateway.findById(input.pacienteId)
 
     if (!paciente) {
       throw new BusinessException('Patient não disponivel.')
     }
 
     const userPatient = await this.gateways.usuario.findById(paciente.userId)
+      await this.scheduleService.publishSchedule({
+        doctor: userDoctor?.name.toString() ?? '',
+        pacient: userPatient?.name.toString() ?? '',
+        date: agenda.getDate(),
+        start: agenda.getHoursStart(),
+        end: agenda.getHoursFinish()
+      })
 
-    await this.scheduleService.publishSchedule({
-      doctor: userDoctor?.name.toString() ?? '',
-      pacient: userPatient?.name.toString() ?? '',
-      date: agenda.getDate(),
-      start: agenda.getHoursStart(),
-      end: agenda.getHoursFinish()
-    })
 
     return agendaSave
   }

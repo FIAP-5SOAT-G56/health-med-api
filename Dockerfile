@@ -67,4 +67,4 @@ COPY --from=builder --chown=node:node /app/node_modules /app/node_modules
 # COPY --from=builder --chown=node:node /app/makefile /app/makefile
 COPY --from=builder --chown=node:node /app/dist /app/dist
 COPY --from=builder --chown=node:node /app/package.json /app/package.json
-CMD ["pnpm", "run", "start:prod"]
+CMD ["npm", "run", "start:prod"]

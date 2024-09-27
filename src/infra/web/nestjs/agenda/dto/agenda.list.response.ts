@@ -1,15 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger'
 
 export class AgendaListElem {
-  constructor (liberada: boolean, startAt: Date, endAt: Date) {
-    this.liberada = liberada
-    this.startAt = startAt
-    this.endAt = endAt
-  }
-
-    readonly liberada: boolean
-    readonly startAt: Date
-    readonly endAt: Date
+  constructor (
+    readonly id: number,
+    readonly liberada: boolean,
+    readonly startAt: Date,
+    readonly endAt: Date,
+  ) {
+    }
 }
 
 export class AgendaListResponse {

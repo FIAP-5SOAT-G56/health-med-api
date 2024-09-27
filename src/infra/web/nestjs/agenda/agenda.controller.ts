@@ -157,7 +157,7 @@ export class AgendController {
   @ApiHeader({
     name: 'authorization'
   })
-  @HttpCode(HttpStatus.FOUND)
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Agendar Consulta' })
   @Roles(ProfileTypeEnum.PACIENTE)
   @ApiBody({ type: ConsultaPacienteRequest })
@@ -203,6 +203,7 @@ export class AgendController {
     }
 
     await this.appCache.set(CONSULTA_GUARD_KEY(input.agendaId), input.agendaId, CONSULTA_CACHE_TTL)
+    await this.appCache.del(AGENDA_CACHE_KEY(output.doctorId))
 
     return {
       id: output.id,
@@ -248,7 +249,7 @@ export class AgendController {
 
     const response = {
       doctorId: output[0].doctorId,
-      agenda: output.map(agenda => new AgendaListElem(agenda.liberada, agenda.startAt, agenda.endAt))
+      agenda: output.map(agenda => new AgendaListElem(agenda.id ?? 0, agenda.liberada, agenda.startAt, agenda.endAt))
     }
 
     await this.appCache.set(AGENDA_CACHE_KEY(id), response, AGENDA_CACHE_TTL)

@@ -61,7 +61,6 @@ export default class AgendaTypeormRepository implements IAgendaRepository {
     const agendas = await this.repository.findBy({
       doctorId
     })
-
     return agendas.map(agenda => Agenda.create(agenda.doctorId, agenda.liberada, agenda.startAt, agenda.endAt, agenda.id, agenda.patientId))
   }
 
@@ -74,7 +73,6 @@ export default class AgendaTypeormRepository implements IAgendaRepository {
   }
 
   async creates (agendas: Agendas): Promise<void> {
-    console.log(agendas)
     await this.repository.save(agendas.get())
   }
 
