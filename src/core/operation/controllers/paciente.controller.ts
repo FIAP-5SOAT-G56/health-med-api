@@ -3,6 +3,8 @@ import PacienteCreateDto from '@/core/domain/dto/input/paciente-create.dto'
 import Paciente from '@/core/domain/entities/paciente'
 
 import { PatientGateway } from '../gateway/patient.gateway'
+import { CreatePatientrWithUserUseCase } from '@/core/application/usecase/paciente/create-patient-with-user.use-case'
+import PatientWithCreateDto from '@/core/domain/dto/input/patient-with-user-create.dto'
 
 export class PacienteController {
   constructor (
@@ -18,6 +20,17 @@ export class PacienteController {
 
     const patient = await useCase.handle(input)
 
+    return patient
+  }
+
+
+  async createPatientrWithUser (
+    input: PatientWithCreateDto
+  ): Promise<Paciente> {
+    const useCase = new CreatePatientrWithUserUseCase(
+      this.gateway
+    )
+    const patient = await useCase.handle(input)
     return patient
   }
 }
