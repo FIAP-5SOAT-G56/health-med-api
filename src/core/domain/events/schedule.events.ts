@@ -1,9 +1,8 @@
 
-
 export class ScheduleEvents {
-  doctor: string;
+  doctor: string
   pacient: string
-  date: string;
-  start: string;
-  end: string;
+  date: string
+  start: string
+  end: string
 }

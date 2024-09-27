@@ -21,15 +21,15 @@ export class AgendaGateway {
     return this.repository.findById(agendaId)
   }
 
-  creates(agendas: Agendas): Promise<void> {
+  creates (agendas: Agendas): Promise<void> {
     return this.repository.creates(agendas)
   }
 
-  agendaConflict(doctorId: number, startAt: Date, endAt: Date): Promise<boolean> {
-    return this.repository.agendaConflict(doctorId, startAt, endAt);
+  agendaConflict (doctorId: number, startAt: Date, endAt: Date): Promise<boolean> {
+    return this.repository.agendaConflict(doctorId, startAt, endAt)
   }
 
-  agendaUpdateConflict(agendaId: number, doctorId: number, startAt: Date, endAt: Date): Promise<boolean> {
-    return this.repository.agendaUpdateConflict(agendaId, doctorId, startAt, endAt);
+  agendaUpdateConflict (agendaId: number, doctorId: number, startAt: Date, endAt: Date): Promise<boolean> {
+    return this.repository.agendaUpdateConflict(agendaId, doctorId, startAt, endAt)
   }
 }

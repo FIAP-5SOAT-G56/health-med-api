@@ -8,7 +8,6 @@ export enum Weekday {
   Sunday = 6,
 }
 
-
 export interface Generic {
   name: string;
   crm: string;

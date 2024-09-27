@@ -1,4 +1,3 @@
 export default interface AgendaMedicoListDto {
-    readonly doctorId: number;
-  }
-  
+  readonly doctorId: number;
+}

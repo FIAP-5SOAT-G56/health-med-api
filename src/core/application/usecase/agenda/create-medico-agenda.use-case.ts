@@ -17,7 +17,7 @@ export default class CreateMedicoAgendaUseCase {
       throw new BusinessException('Médico não Registrado.')
     }
 
-    let conflict = await this.gateway.agendaConflict(doctor.id, input.startAt, input.endAt);
+    const conflict = await this.gateway.agendaConflict(doctor.id, input.startAt, input.endAt)
 
     if (conflict) {
       throw new BusinessException('Conflito de Horário.')

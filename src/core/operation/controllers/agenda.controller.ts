@@ -1,17 +1,17 @@
 import CreateConsultaPacienteUseCase from '@/core/application/usecase/agenda/create-consulta-paciente.use-case'
 import CreateMedicoAgendaUseCase from '@/core/application/usecase/agenda/create-medico-agenda.use-case'
-import UpdateMedicoAgendaUseCase from '@/core/application/usecase/agenda/update-medico-agenda.use-case'
 import ListMedicoAgendaUseCase from '@/core/application/usecase/agenda/list-medico-agenda.use-case'
+import UpdateMedicoAgendaUseCase from '@/core/application/usecase/agenda/update-medico-agenda.use-case'
 import AgendaConsultaPacienteDto from '@/core/domain/dto/input/agenda-consulta-paciente.dto'
 import AgendaMedicoCreateDto from '@/core/domain/dto/input/agenda-medico-create.dto'
-import AgendaMedicoUpdateDto from '@/core/domain/dto/input/agenda-medico-update.dto'
 import AgendaMedicoListDto from '@/core/domain/dto/input/agenda-medico-list.dto'
+import AgendaMedicoUpdateDto from '@/core/domain/dto/input/agenda-medico-update.dto'
 import Agenda from '@/core/domain/entities/agenda'
+import { ScheduleService } from '@/core/domain/service/schedule-service'
 
 import { AgendaGateway } from '../gateway/agenda.gateway'
-import { MedicoGateway } from '../gateway/medico.gateway'
 import { Gateway } from '../gateway/gateway'
-import { ScheduleService } from '@/core/domain/service/schedule-service'
+import { MedicoGateway } from '../gateway/medico.gateway'
 import { PacienteGateway } from '../gateway/paciente.gateway'
 
 export class AgendaController {
@@ -63,7 +63,7 @@ export class AgendaController {
   ): Promise<Agenda[]> {
     const useCase = new ListMedicoAgendaUseCase(
       this.gateway
-    );
+    )
 
     const agenda = await useCase.handle(input)
 

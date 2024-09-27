@@ -1,20 +1,21 @@
-import { FindOptionsRelations, FindOptionsSelect, FindOptionsWhere, Repository } from "typeorm";
-import { GenericFilter, SortOrder } from "./gereric.filter";
+import { FindOptionsRelations, FindOptionsSelect, FindOptionsWhere, Repository } from 'typeorm'
+
+import { GenericFilter, SortOrder } from './gereric.filter'
 
 export class PageService {
-  protected createOrderQuery(filter: GenericFilter) {
-    const order: any = {};
+  protected createOrderQuery (filter: GenericFilter) {
+    const order: any = {}
 
     if (filter.orderBy) {
-      order[filter.orderBy] = filter.sortOrder;
-      return order;
+      order[filter.orderBy] = filter.sortOrder
+      return order
     }
 
-    order.createdAt = SortOrder.DESC;
-    return order;
+    order.createdAt = SortOrder.DESC
+    return order
   }
 
-  protected paginate<Entity>(
+  protected paginate<Entity> (
     repository: Repository<any>,
     filter: GenericFilter,
     where: FindOptionsWhere<Entity>,
@@ -25,10 +26,9 @@ export class PageService {
       order: this.createOrderQuery(filter),
       skip: (filter.page - 1) * (filter.pageSize + 1),
       take: filter.pageSize,
-      where: where,
+      where,
       relations,
-      select: select,
-    });
+      select,
+    })
   }
-  
 }

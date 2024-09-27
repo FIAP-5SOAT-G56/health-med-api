@@ -9,37 +9,39 @@ import {
   Patch,
   Get,
   Param,
-  UseGuards
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common'
 import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ProfileTypeEnum } from '@/core/domain/enums/profile-status.enum'
 import IAgendaRepository, { IAgendaRepository as IAgendaRepositorySymbol } from '@/core/domain/repositories/iagenda.repository'
 import IMedicoRepository, { IMedicoRepository as IMedicoRepositorySymbol } from '@/core/domain/repositories/imedico.repository'
+import IPacienteRepository, { IPacienteRepository as IPacienteRepositorySymbol } from '@/core/domain/repositories/ipaciente.repository'
+import IUserRepository, { IUserRepository as IUserRepositorySymbol } from '@/core/domain/repositories/iusuario.repository'
+import { IScheduleServiceSymbol, ScheduleService } from '@/core/domain/service/schedule-service'
+import AppCache from '@/core/helpers/AppCache'
 import { AgendaController } from '@/core/operation/controllers/agenda.controller'
 import { AgendaGateway } from '@/core/operation/gateway/agenda.gateway'
+import { Gateway } from '@/core/operation/gateway/gateway'
 import { MedicoGateway } from '@/core/operation/gateway/medico.gateway'
+import { PacienteGateway } from '@/core/operation/gateway/paciente.gateway'
+import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
 
 import { AuthGuard } from '../decorators/auth.guard'
 import { Roles } from '../decorators/roles.decorator'
 import { RolesGuard } from '../decorators/roles.guard'
 import { User } from '../decorators/user.decorator'
 import { UserEntity } from '../entities/user.entities'
+import { TransactionInterceptor } from '../interceptor/transaction-interceptor'
 import CreateAgendaRequest from './dto/agenda.create.request'
-import AgendaResponse from './dto/agenda.response'
 import { AgendaListResponse, AgendaListElem } from './dto/agenda.list.response'
+import AgendaResponse from './dto/agenda.response'
 import AgendaMedicoUpdateDto from './dto/agenda.update.request'
 import ConsultaPacienteRequest from './dto/consulta.paciente.create.request'
-import { IScheduleServiceSymbol, ScheduleService } from '@/core/domain/service/schedule-service'
-import IPacienteRepository, { IPacienteRepository as IPacienteRepositorySymbol } from '@/core/domain/repositories/ipaciente.repository'
-import IUserRepository, { IUserRepository as IUserRepositorySymbol } from '@/core/domain/repositories/iusuario.repository'
-import { Gateway } from '@/core/operation/gateway/gateway'
-import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
-import { PacienteGateway } from '@/core/operation/gateway/paciente.gateway'
-import AppCache from '@/core/helpers/AppCache'
 
 const AGENDA_CACHE_KEY = (doctorId: number) => 'cache:agenda:doctorId=' + doctorId
-const CONSULTA_GUARD_KEY = (agendaId: number) => 'cache:consulta:key=' + agendaId 
+const CONSULTA_GUARD_KEY = (agendaId: number) => 'cache:consulta:key=' + agendaId
 const CONSULTA_CACHE_TTL = 1 * 60 * 1000 // 1 min
 const AGENDA_CACHE_TTL = 1 * 60 * 60 * 1000 // 1 min
 
@@ -130,6 +132,7 @@ export class AgendController {
   @ApiOperation({ summary: 'Agendar Consulta' })
   @Roles(ProfileTypeEnum.PACIENTE)
   @ApiBody({ type: ConsultaPacienteRequest })
+  @UseInterceptors(TransactionInterceptor)
   @ApiCreatedResponse({ description: 'Registro criado', type: AgendaResponse })
   async schedule (
       @Body() input: ConsultaPacienteRequest,
@@ -139,7 +142,7 @@ export class AgendController {
     const doctorGateway = new MedicoGateway(this.doctorRepository)
     const controller = new AgendaController(gateway, doctorGateway)
     const gateways = new Gateway(new UsuarioGateway(this.userRepository), new MedicoGateway(this.doctorRepository))
-    const patientGateway =  new PacienteGateway(this.patientRepository)
+    const patientGateway = new PacienteGateway(this.patientRepository)
 
     const cached = await this.appCache.get<number>(CONSULTA_GUARD_KEY(input.agendaId))
 
@@ -154,7 +157,7 @@ export class AgendController {
     }
 
     const output = await controller.schedule(
-      { ...input, pacienteId: user.getKeyPatient() },  
+      { ...input, pacienteId: user.getKeyPatient() },
       this.scheduleService,
       gateways,
       patientGateway
@@ -197,12 +200,12 @@ export class AgendController {
     const cached = await this.appCache.get<AgendaListResponse>(AGENDA_CACHE_KEY(id))
 
     if (cached) {
-      return cached;
+      return cached
     }
 
     const output = await controller.list({
       doctorId: id
-    });
+    })
 
     if (output.length == 0) {
       throw new HttpException(
@@ -214,14 +217,13 @@ export class AgendController {
       )
     }
 
-    let response = {
+    const response = {
       doctorId: output[0].doctorId,
       agenda: output.map(agenda => new AgendaListElem(agenda.liberado, agenda.startAt, agenda.endAt))
-    };
+    }
 
-    await this.appCache.set(AGENDA_CACHE_KEY(id), response, AGENDA_CACHE_TTL);
+    await this.appCache.set(AGENDA_CACHE_KEY(id), response, AGENDA_CACHE_TTL)
 
-    return response;
+    return response
   }
-
 }

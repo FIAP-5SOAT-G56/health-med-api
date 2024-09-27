@@ -9,13 +9,12 @@ export default class ListMedicoAgendaUseCase {
   ) {}
 
   async handle (input: AgendaMedicoListDto): Promise<Agenda[]> {
-
     const agendas: Agenda[] | undefined = await this.gateway.findByDoctor(input.doctorId)
 
     if (!agendas) {
       throw new BusinessException('Nenhuma Agenda Registrada.')
     }
 
-    return agendas;
+    return agendas
   }
 }

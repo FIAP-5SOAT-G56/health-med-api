@@ -22,8 +22,8 @@ export default class CreateMedicoUseCase {
     usuario.addProfile(ProfileTypeEnum.PACIENTE, undefined)
 
     await this.gateway.paciente.create(paciente)
-    await this.gateway.usuario.save(usuario)
 
+    await this.gateway.usuario.save(usuario)
     return paciente
   }
 }

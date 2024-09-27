@@ -9,10 +9,13 @@ import Cpf from '@/core/domain/value-object/Cpf'
 import Email from '@/core/domain/value-object/email'
 import { User as Entity } from '@/infra/persistence/typeorm/entities/user'
 
+import { Transaction } from '../service/transaction'
+
 @Injectable()
 export default class UserTypeormRepository implements IUserRepository {
   constructor (
-    @InjectRepository(Entity) private readonly repository: Repository<Entity>
+    @InjectRepository(Entity) private readonly repository: Repository<Entity>,
+    private readonly transaction: Transaction
   ) {}
 
   async create (input: User): Promise<User> {
@@ -51,6 +54,19 @@ export default class UserTypeormRepository implements IUserRepository {
   }
 
   async save (input: User): Promise<void> {
+    if (this.transaction.getQueryRunner().isTransactionActive) {
+      await this.transaction.getQueryRunner().manager.update(
+        Entity,
+        { id: input.id }, {
+          cpf: input.cpf.toString(),
+          email: input.email.toString(),
+          name: input.name.toString(),
+          password: input.password.value,
+          salt: input.password.salt,
+        })
+      return
+    }
+
     await this.repository.update(
       { id: input.id }, {
         cpf: input.cpf.toString(),

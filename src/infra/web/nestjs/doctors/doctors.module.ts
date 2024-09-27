@@ -9,6 +9,7 @@ import { User } from '@/infra/persistence/typeorm/entities/user'
 import DoctorTypeormRepository from '@/infra/persistence/typeorm/repository/doctor-typeorm.repository'
 import UserTypeormRepository from '@/infra/persistence/typeorm/repository/user-typeorm.repository'
 import { DoctorsController } from '@/infra/web/nestjs/doctors/doctors.controller'
+
 import { DoctorPaginateService } from './doctors.service'
 
 @Module({

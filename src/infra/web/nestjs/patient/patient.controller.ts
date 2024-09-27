@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Inject,
   Post,
+  UseInterceptors,
 } from '@nestjs/common'
 import { ApiBody, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 
@@ -16,6 +17,7 @@ import { PatientGateway } from '@/core/operation/gateway/patient.gateway'
 import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
 
 import { Public } from '../decorators/auth.guard'
+import { TransactionInterceptor } from '../interceptor/transaction-interceptor'
 import PatientRequest from './dto/create-patient.request'
 import PatientResponse from './dto/patient.response'
 
@@ -33,6 +35,7 @@ export class PatientsController {
   @ApiOperation({ summary: 'Criar Paciente' })
   @ApiBody({ type: PatientRequest })
   @ApiCreatedResponse({ description: 'Registro criado', type: PatientResponse })
+  @UseInterceptors(TransactionInterceptor)
   async create (
       @Body() input: PatientRequest
     ): Promise<PatientResponse> {

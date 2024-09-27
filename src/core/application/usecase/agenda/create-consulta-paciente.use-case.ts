@@ -21,7 +21,7 @@ export default class CreateConsultaPacienteUseCase {
       throw new BusinessException('Agenda não disponivel.')
     }
 
-    if(!agenda.liberado) {
+    if (!agenda.liberado) {
       throw new BusinessException('Horário Indisponível.')
     }
 
@@ -51,6 +51,6 @@ export default class CreateConsultaPacienteUseCase {
       end: agenda.getHoursFinish()
     })
 
-    return agendaSave;
+    return agendaSave
   }
 }

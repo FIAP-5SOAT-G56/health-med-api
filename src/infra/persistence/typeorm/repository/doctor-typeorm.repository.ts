@@ -38,7 +38,7 @@ export default class DoctorTypeormRepository implements IDoctorRepository {
     return doctor ? new Doctor(doctor.id, doctor.userId, doctor.crm) : undefined
   }
 
-  async findById(id: number): Promise<Doctor | undefined> {
+  async findById (id: number): Promise<Doctor | undefined> {
     const doctor = await this.repository.findOneBy({
       id
     })

@@ -16,15 +16,15 @@ import { MedicoController } from '@/core/operation/controllers/medico.controller
 import { Gateway } from '@/core/operation/gateway/gateway'
 import { MedicoGateway } from '@/core/operation/gateway/medico.gateway'
 import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
+import { Generic } from '@/infra/persistence/typeorm/service/generic'
+import { GenericFilter } from '@/infra/persistence/typeorm/service/gereric.filter'
 
 import { Public } from '../decorators/auth.guard'
+import { DoctorPaginateService } from './doctors.service'
+import { DoctorWhereRequest } from './dto/doctor-where.request'
+import { DoctorWithUserRequest } from './dto/doctor-with-user.request'
 import DoctorRequest from './dto/doctor.request'
 import DoctorResponse from './dto/produto.response'
-import { DoctorWithUserRequest } from './dto/doctor-with-user.request'
-import { DoctorPaginateService } from './doctors.service'
-import { GenericFilter } from '@/infra/persistence/typeorm/service/gereric.filter'
-import { Generic } from '@/infra/persistence/typeorm/service/generic'
-import { DoctorWhereRequest } from './dto/doctor-where.request'
 
 @Controller('v1/doctors')
 @ApiTags('v1/doctors')
@@ -72,10 +72,10 @@ export class DoctorsController {
   @Get('')
   @Public()
   @ApiOperation({ summary: 'Buscar Médicos' })
-  @ApiQuery({ type: DoctorWhereRequest})
+  @ApiQuery({ type: DoctorWhereRequest })
   @ApiCreatedResponse({ description: 'Registro criado', type: DoctorResponse })
   async find (
-    @Query() filter: GenericFilter & Generic  ) {
+    @Query() filter: GenericFilter & Generic) {
     return this.servicePaginate.findAllPaginated(filter)
   }
 }
