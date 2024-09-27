@@ -1,0 +1,152 @@
+name: Continuous Deployment
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: 20.x
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: fiap-health-med/health-med-api
+  ECS_CLUSTER: fiap-health-med-ecs-cluster
+  ECS_SERVICE: fiap-health-med-health-med-api-ecs-service 
+  ECS_TASK_DEFINITION: health-med-api
+  ECS_CONTAINER_NAME: health-med-api
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        npm ci
+
+    - name: Build
+      run: |
+        npm run build
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        npm ci
+
+    - name: Lint
+      run: |
+        npm run lint
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    needs: [lint,build]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        npm ci
+
+    - name: Unit Tests
+      run: |
+        npm run test:unit
+
+  deploy:
+    needs: [unit-tests]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-region: ${{ env.AWS_REGION }}
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    - name: Login to Amazon ECR
+      id: login_ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Extract branch name
+      id: extract_branch
+      run: |
+        echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+
+    - name: Create image name
+      id: create_image_name
+      env:
+        ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
+        ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
+        REPO_NAME: ${{ github.event.repository.name }}
+        BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
+        IMAGE_HASH: ${{ github.sha }}
+      run: echo "image_name=${ECR_REGISTRY}/${ECR_REPOSITORY}:${REPO_NAME}_${BRANCH_NAME}_${IMAGE_HASH}" >> $GITHUB_OUTPUT
+
+    - name: Build Docker image
+      env:
+        DOCKERFILE_PATH: Dockerfile
+        IMAGE_NAME: ${{ steps.create_image_name.outputs.image_name }}
+      run: |
+        docker build \
+          -f ${DOCKERFILE_PATH} \
+          -t ${IMAGE_NAME} .
+
+    - name: Push image to ECR
+      env:
+        IMAGE_NAME: ${{ steps.create_image_name.outputs.image_name }}
+      run: |
+        docker push ${IMAGE_NAME}
+
+    - name: Download task definition
+      env:
+        TASK_DEFINITION_FAMILY: ${{ env.ECS_TASK_DEFINITION }}
+      run: |
+        aws ecs describe-task-definition --task-definition ${TASK_DEFINITION_FAMILY} --query taskDefinition > task-definition.json
+
+    - name: Fill in the new image ID in the Amazon ECS task definition
+      id: task_def
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      env:
+        API_CONTAINER_NAME: ${{ env.ECS_CONTAINER_NAME }}
+      with:
+        task-definition: task-definition.json
+        container-name: ${{ env.API_CONTAINER_NAME }}
+        image: ${{ steps.create_image_name.outputs.image_name }}
+
+    - name: Deploy Amazon ECS task definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        task-definition: ${{ steps.task_def.outputs.task-definition }}
+        service: ${{ env.ECS_SERVICE }}
+        cluster: ${{ env.ECS_CLUSTER }}
+        wait-for-service-stability: true
