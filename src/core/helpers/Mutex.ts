@@ -12,7 +12,7 @@ export default class Mutex implements OnModuleDestroy {
   private memory: Record<string, number | undefined> = {}
   private redis: Redis
 
-  constructor(
+  constructor (
   ) {
     this.redis = new Redis(
       envs.REDIS_PORT,
@@ -27,11 +27,11 @@ export default class Mutex implements OnModuleDestroy {
     })
   }
 
-  onModuleDestroy(): void {
-    this.redis?.disconnect()
+  onModuleDestroy (): void {
+    this.redis.disconnect()
   }
 
-  async acquire(key: string, ttlInSeconds: number = 60): Promise<boolean> {
+  async acquire (key: string, ttlInSeconds: number = 60): Promise<boolean> {
     if (!envs.REDIS_ENABLED || !envs.CACHE_ENABLED) {
       if (this.memory[key]) {
         return false
@@ -45,7 +45,7 @@ export default class Mutex implements OnModuleDestroy {
     return result === 'OK'
   }
 
-  async release(key: string): Promise<void> {
+  async release (key: string): Promise<void> {
     if (!envs.REDIS_ENABLED || !envs.CACHE_ENABLED) {
       this.memory[key] = undefined
       return

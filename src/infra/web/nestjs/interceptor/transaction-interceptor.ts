@@ -13,7 +13,7 @@ export class TransactionInterceptor implements NestInterceptor {
     private readonly transaction: Transaction
   ) {}
 
-  async intercept(_: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
+  async intercept (_: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
     const queryRunner = this.dataSource.createQueryRunner()
 
     await queryRunner.startTransaction()
