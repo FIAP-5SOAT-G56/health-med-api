@@ -30,7 +30,7 @@ describe('Agendas', () => {
     }).toThrow(new BusinessException('Horario repetido'))
   })
 
-  it('Testa dentro', () => {
+  it('Testa dentro 2', () => {
     const agendas = new Agendas(
       [
         new Agenda(1, 1, undefined, true, new Date('2024-12-17T10:00:00'), new Date('2024-12-17T10:30:00')),
