@@ -99,35 +99,38 @@ jobs:
       id: login_ecr
       uses: aws-actions/amazon-ecr-login@v2
 
-    - name: Extract branch name
-      id: extract_branch
+    - id: get_branch
+      name: Extract branch name
       run: |
         echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
 
-    - name: Create image name
-      id: create_image_name
+    - id: image_name
+      name: Get image name
       env:
-        ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
-        ECR_REPOSITORY: ${{ env.ECR_REPOSITORY }}
-        REPO_NAME: ${{ github.event.repository.name }}
-        BRANCH_NAME: ${{ steps.extract_branch.outputs.branch }}
-        IMAGE_HASH: ${{ github.sha }}
-      run: echo "image_name=${ECR_REGISTRY}/${ECR_REPOSITORY}:${REPO_NAME}_${BRANCH_NAME}_${IMAGE_HASH}" >> $GITHUB_OUTPUT
+        IMAGE_TAG: ${{ steps.get_branch.outputs.branch }}_${{ github.sha }}
+      run: |
+        echo "tag=${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}" >> $GITHUB_OUTPUT
+        echo "latest=${{ env.ECR_REPOSITORY }}:latest" >> $GITHUB_OUTPUT
 
     - name: Build Docker image
       env:
+        BUNDLE_GITHUB__COM: ${{ secrets.BUNDLE_GITHUB__COM }}
         DOCKERFILE_PATH: Dockerfile
-        IMAGE_NAME: ${{ steps.create_image_name.outputs.image_name }}
+        IMAGE_URI_TAG: ${{ steps.login_ecr.outputs.registry }}/${{ steps.image_name.outputs.tag }}
+        IMAGE_URI_LATEST: ${{ steps.login_ecr.outputs.registry }}/${{ steps.image_name.outputs.latest }}
       run: |
         docker build \
+          --build-arg BUNDLE_GITHUB__COM=${BUNDLE_GITHUB__COM} \
           -f ${DOCKERFILE_PATH} \
-          -t ${IMAGE_NAME} .
+          -t ${IMAGE_URI_TAG} \
+          -t ${IMAGE_URI_LATEST} \
+          .
 
     - name: Push image to ECR
       env:
-        IMAGE_NAME: ${{ steps.create_image_name.outputs.image_name }}
+        IMAGE_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}
       run: |
-        docker push ${IMAGE_NAME}
+        docker push --all-tags ${{ env.IMAGE_REPOSITORY }}
 
     - name: Download task definition
       env:
@@ -135,39 +138,16 @@ jobs:
       run: |
         aws ecs describe-task-definition --task-definition ${TASK_DEFINITION_FAMILY} --query taskDefinition > task-definition.json
 
-    - name: Load AWS secrets
-      id: load_secrets
-      uses: aws-actions/aws-secretsmanager-get-secrets@v2
-      with:
-        secret-ids: |
-          TD_, ${{ secrets.AWS_API_SECRETS_ID }}
-        parse-json-secrets: true
-    
-    - name: Add secrets to Task Definition
-      env:
-        DB_HOSTNAME: ${{ secrets.TD_DB_HOSTNAME }}
-        DB_DATABASE: ${{ secrets.TD_DB_DATABASE }}
-        DB_USER: ${{ secrets.TD_DB_USER }}
-        DB_PASSWORD: ${{ secrets.TD_DB_PASSWORD }}
-        REDIS_HOSTNAME: ${{ secrets.TD_REDIS_HOSTNAME }}
-        JWT_SECRET: ${{ secrets.TD_JWT_SECRET }}
-      run: |
-        sed -i "s/<db_hostname>/$DB_HOSTNAME/g" task-definition.json
-        sed -i "s/<db_database>/$DB_DATABASE/g" task-definition.json
-        sed -i "s/<db_user>/$DB_USER/g" task-definition.json
-        sed -i "s/<db_password>/$DB_PASSWORD/g" task-definition.json
-        sed -i "s/<redis_hostname>/$REDIS_HOSTNAME/g" task-definition.json
-        sed -i "s/<jwt_secret>/$JWT_SECRET/g" task-definition.json
-
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task_def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       env:
         API_CONTAINER_NAME: ${{ env.ECS_CONTAINER_NAME }}
+        IMAGE_URI_TAG: ${{ steps.login_ecr.outputs.registry }}/${{ steps.image_name.outputs.tag }}
       with:
         task-definition: task-definition.json
         container-name: ${{ env.API_CONTAINER_NAME }}
-        image: ${{ steps.create_image_name.outputs.image_name }}
+        image: ${{ env.IMAGE_URI_TAG }}
 
     - name: Deploy Amazon ECS task definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
