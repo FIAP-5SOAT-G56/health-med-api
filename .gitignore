@@ -46,3 +46,5 @@ lerna-debug.log*
 #env
 .env
 .env.test
+
+.pnpm-store

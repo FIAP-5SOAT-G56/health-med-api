@@ -13,7 +13,7 @@ export class Environment {
   }
 
   static get PORT () {
-    return process.env.PORT || 3001
+    return process.env.PORT || 3000
   }
 
   static get SENTRY_DSN () {

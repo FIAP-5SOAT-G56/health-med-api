@@ -104,4 +104,17 @@ export default class AgendaTypeormRepository implements IAgendaRepository {
 
     return conflictAgenda.length > 0
   }
+
+  async agendaPatientConflict(patientId: number, startAt: Date, endAt: Date): Promise<boolean> {
+    const startDateAt = new Date(startAt)
+    const endDateAt = new Date(endAt)
+
+    const conflictAgenda = await this.repository
+      .createQueryBuilder('agenda')
+      .where('agenda.patientId = :patientId', { patientId })
+      .andWhere('agenda.startAt < :endDateAt AND agenda.endAt > :startDateAt', { startDateAt, endDateAt })
+      .getMany()
+
+    return conflictAgenda.length > 0
+  }
 }

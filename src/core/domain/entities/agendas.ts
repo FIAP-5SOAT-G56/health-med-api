@@ -4,7 +4,7 @@ import Agenda from './agenda'
 export class Agendas {
   public constructor (
     private agendas: Agenda[] = []
-  ) {}
+  ) { }
 
   public push (
     doctorId: number,
@@ -15,9 +15,9 @@ export class Agendas {
     const agendaNew = new Agenda(undefined, doctorId, undefined, liberada, startAt, endAt)
 
     const exists = this.agendas.filter(agenda => {
-      return !(agendaNew.startAt > agenda.startAt && agendaNew.startAt >= agenda.endAt ||
-      agendaNew.startAt <= agenda.startAt && agendaNew.endAt < agenda.endAt ||
-      agendaNew.startAt == agenda.startAt && agendaNew.endAt == agenda.endAt
+      return !((agendaNew.startAt > agenda.startAt && agendaNew.startAt >= agenda.endAt) ||
+        (agendaNew.startAt <= agenda.startAt && agendaNew.endAt < agenda.endAt) ||
+        (agendaNew.startAt === agenda.startAt && agendaNew.endAt === agenda.endAt)
       )
     })
 

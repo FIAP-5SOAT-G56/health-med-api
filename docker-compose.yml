@@ -15,12 +15,12 @@ services:
       target: development
     command: sh -c "pnpm install && pnpm start:dev"
     ports:
-      - 3001:3001
+      - 3000:3000
     volumes:
       - .:/app # to sync code changes
     working_dir: '/app'
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://127.0.0.1:3001/health-check"]
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:3000/health-check"]
       interval: 1m30s
       timeout: 10s
       retries: 5

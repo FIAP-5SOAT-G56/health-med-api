@@ -3,11 +3,6 @@ import { ApiProperty } from '@nestjs/swagger'
 import { Transform } from 'class-transformer'
 import { isISO8601 } from 'class-validator'
 
-export default class CreateAgendasRequest {
-    @ApiProperty()
-    readonly dates: DateDto[]
-}
-
 class DateDto {
     @ApiProperty({ description: 'Inicio Data/Hora da Consulta', example: '12-08-2024/08:00:00' })
     @Transform(({ value }) => {
@@ -28,4 +23,9 @@ class DateDto {
     })
     @ApiProperty({ description: 'Término Data/Hora da Consulta', example: '12-08-2024/10:00:00' })
     readonly endAt: Date
+}
+
+export default class CreateAgendasRequest {
+  @ApiProperty()
+  readonly dates: DateDto[]
 }

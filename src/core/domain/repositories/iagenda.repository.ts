@@ -9,6 +9,7 @@ export default interface IAgendaRepository {
   findByDoctor(doctorId: number): Promise<Agenda[] | undefined>;
   findById(agendaId: number): Promise<Agenda | undefined>;
   agendaConflict(doctorId: number, startAt: Date, endAt: Date): Promise<boolean>;
+  agendaPatientConflict(patientId: number, startAt: Date, endAt: Date): Promise<boolean>;
   agendaUpdateConflict(agendaId: number, doctorId: number, startAt: Date, endAt: Date): Promise<boolean>;
 }
 
