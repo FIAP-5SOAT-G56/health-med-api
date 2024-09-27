@@ -36,6 +36,13 @@ import IUserRepository, { IUserRepository as IUserRepositorySymbol } from '@/cor
 import { Gateway } from '@/core/operation/gateway/gateway'
 import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
 import { PacienteGateway } from '@/core/operation/gateway/paciente.gateway'
+import AppCache from '@/core/helpers/AppCache'
+
+const AGENDA_CACHE_KEY = (doctorId: number) => 'cache:agenda:doctorId=' + doctorId
+const CONSULTA_GUARD_KEY = (agendaId: number) => 'cache:consulta:key=' + agendaId 
+const CONSULTA_CACHE_TTL = 1 * 60 * 1000 // 1 min
+const AGENDA_CACHE_TTL = 1 * 60 * 60 * 1000 // 1 min
+
 @UseGuards(AuthGuard)
 @Controller('v1/agenda')
 @ApiTags('v1/agenda')
@@ -46,6 +53,7 @@ export class AgendController {
       @Inject(IScheduleServiceSymbol) private readonly scheduleService: ScheduleService,
       @Inject(IPacienteRepositorySymbol) private readonly patientRepository: IPacienteRepository,
       @Inject(IUserRepositorySymbol) private readonly userRepository: IUserRepository,
+      private appCache: AppCache,
     ) {}
 
   @Post()
@@ -62,6 +70,8 @@ export class AgendController {
     const doctorGateway = new MedicoGateway(this.doctorRepository)
     const controller = new AgendaController(gateway, doctorGateway)
     const output = await controller.create(input)
+
+    await this.appCache.del(AGENDA_CACHE_KEY(output.doctorId))
 
     return {
       id: output.id,
@@ -99,6 +109,8 @@ export class AgendController {
       )
     }
 
+    await this.appCache.del(AGENDA_CACHE_KEY(output.doctorId))
+
     return {
       id: output.id,
       doctorId: output.doctorId,
@@ -128,6 +140,19 @@ export class AgendController {
     const controller = new AgendaController(gateway, doctorGateway)
     const gateways = new Gateway(new UsuarioGateway(this.userRepository), new MedicoGateway(this.doctorRepository))
     const patientGateway =  new PacienteGateway(this.patientRepository)
+
+    const cached = await this.appCache.get<number>(CONSULTA_GUARD_KEY(input.agendaId))
+
+    if (cached) {
+      throw new HttpException(
+        {
+          status: HttpStatus.CONFLICT,
+          error: 'Agenda não disponivel'
+        },
+        HttpStatus.NOT_FOUND
+      )
+    }
+
     const output = await controller.schedule(
       { ...input, pacienteId: user.getKeyPatient() },  
       this.scheduleService,
@@ -144,6 +169,8 @@ export class AgendController {
         HttpStatus.NOT_FOUND
       )
     }
+
+    await this.appCache.set(CONSULTA_GUARD_KEY(input.agendaId), input.agendaId, CONSULTA_CACHE_TTL)
 
     return {
       id: output.id,
@@ -167,11 +194,15 @@ export class AgendController {
     const doctorGateway = new MedicoGateway(this.doctorRepository)
     const controller = new AgendaController(gateway, doctorGateway)
 
+    const cached = await this.appCache.get<AgendaListResponse>(AGENDA_CACHE_KEY(id))
+
+    if (cached) {
+      return cached;
+    }
+
     const output = await controller.list({
       doctorId: id
     });
-
-    console.log(output)
 
     if (output.length == 0) {
       throw new HttpException(
@@ -183,10 +214,14 @@ export class AgendController {
       )
     }
 
-    return {
+    let response = {
       doctorId: output[0].doctorId,
       agenda: output.map(agenda => new AgendaListElem(agenda.liberado, agenda.startAt, agenda.endAt))
-    }
+    };
+
+    await this.appCache.set(AGENDA_CACHE_KEY(id), response, AGENDA_CACHE_TTL);
+
+    return response;
   }
 
 }
