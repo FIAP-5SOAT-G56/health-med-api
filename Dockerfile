@@ -30,4 +30,5 @@ RUN npm ci --include=dev --ignore-scripts
 COPY ./ ./
 RUN npm run build
 
-ENTRYPOINT [ "npm", "run", "start:prod" ]
+ENTRYPOINT [ "npm", "run", "migration:run" ]
+CMD [ "npm", "run", "start:prod" ]
