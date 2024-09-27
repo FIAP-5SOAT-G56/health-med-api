@@ -32,12 +32,12 @@ export class CreatePatientrWithUserUseCase {
   private async findOrCreateUser (input: UserCreateDto): Promise<Usuario> {
     const usuario = await this.gateway.usuario.findByEmail(new Email(input.email))
     if (usuario) {
-      usuario
+      return usuario
     }
 
     const usuarioByCpf = await this.gateway.usuario.findByCpf(new Cpf(input.cpf))
     if (usuarioByCpf) {
-      usuario
+      return usuarioByCpf
     }
 
     const usuarioCriado = await Usuario.create(

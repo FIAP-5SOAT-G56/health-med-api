@@ -185,6 +185,8 @@ export class AgendController {
       )
     }
 
+    await this.appCache.set(CONSULTA_GUARD_KEY(input.agendaId), input.agendaId, CONSULTA_CACHE_TTL)
+
     const output = await controller.schedule(
       { ...input, pacienteId: user.getKeyPatient() },
       this.scheduleService,
@@ -202,9 +204,7 @@ export class AgendController {
       )
     }
 
-    await this.appCache.set(CONSULTA_GUARD_KEY(input.agendaId), input.agendaId, CONSULTA_CACHE_TTL)
     await this.appCache.del(AGENDA_CACHE_KEY(output.doctorId))
-
     return {
       id: output.id,
       doctorId: output.doctorId,

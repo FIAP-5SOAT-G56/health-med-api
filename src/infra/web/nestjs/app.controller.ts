@@ -9,9 +9,9 @@ class HealthCheck {
 export default class AppController {
   @Get()
   @ApiOperation({ summary: 'API index endpoint' })
-  @ApiOkResponse({ description: 'API index endpoint', type: 'Health Med API' })
+  @ApiOkResponse({ description: 'API index endpoint', type: 'Health&Med API' })
   app (): string {
-    return 'Health Med API'
+    return 'Health&Med API'
   }
 
   @Get('/health-check')

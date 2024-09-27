@@ -28,8 +28,8 @@ const configureSentry = (app: INestApplication) => {
 
 const configureSwagger = (app: INestApplication) => {
   const swaggerOptions = new DocumentBuilder()
-    .setTitle('Health Med API')
-    .setDescription('Health Med API documentation')
+    .setTitle('Health&Med API')
+    .setDescription('Health&Med API documentation')
     .setVersion('0.0.1')
     .addBearerAuth(undefined, 'Authorization')
     .build()
