@@ -103,7 +103,7 @@ export default class AgendaTypeormRepository implements IAgendaRepository {
     return conflictAgenda.length > 0
   }
 
-  async agendaPatientConflict(patientId: number, startAt: Date, endAt: Date): Promise<boolean> {
+  async agendaPatientConflict (patientId: number, startAt: Date, endAt: Date): Promise<boolean> {
     const startDateAt = new Date(startAt)
     const endDateAt = new Date(endAt)
 

@@ -48,14 +48,13 @@ export default class CreateConsultaPacienteUseCase {
     }
 
     const userPatient = await this.gateways.usuario.findById(paciente.userId)
-      await this.scheduleService.publishSchedule({
-        doctor: userDoctor?.name.toString() ?? '',
-        pacient: userPatient?.name.toString() ?? '',
-        date: agenda.getDate(),
-        start: agenda.getHoursStart(),
-        end: agenda.getHoursFinish()
-      })
-
+    await this.scheduleService.publishSchedule({
+      doctor: userDoctor?.name.toString() ?? '',
+      pacient: userPatient?.name.toString() ?? '',
+      date: agenda.getDate(),
+      start: agenda.getHoursStart(),
+      end: agenda.getHoursFinish()
+    })
 
     return agendaSave
   }

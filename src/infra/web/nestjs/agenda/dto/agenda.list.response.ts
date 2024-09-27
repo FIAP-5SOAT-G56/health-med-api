@@ -7,7 +7,7 @@ export class AgendaListElem {
     readonly startAt: Date,
     readonly endAt: Date,
   ) {
-    }
+  }
 }
 
 export class AgendaListResponse {
