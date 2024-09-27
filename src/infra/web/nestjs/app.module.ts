@@ -3,11 +3,8 @@ import { Global, Inject, Module } from '@nestjs/common'
 import { APP_GUARD } from '@nestjs/core'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { SqsModule } from '@ssut/nestjs-sqs'
 import { Cache } from 'cache-manager'
 import * as redisStore from 'cache-manager-redis-store'
-
-import QueueConfig from '@/config/QueueConfig'
 import RedisConfig from '@/config/RedisConfig'
 import TypeOrmConfig from '@/config/typeorm/TypeOrmConfig'
 import AppCache from '@/core/helpers/AppCache'
@@ -35,7 +32,6 @@ export const appModules = [
       store: redisStore,
       ...RedisConfig
     }),
-    SqsModule.register(QueueConfig),
     ...appModules
   ],
   controllers: [

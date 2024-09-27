@@ -8,11 +8,14 @@ import Agenda from '@/core/domain/entities/agenda'
 
 import { AgendaGateway } from '../gateway/agenda.gateway'
 import { MedicoGateway } from '../gateway/medico.gateway'
+import { Gateway } from '../gateway/gateway'
+import { ScheduleService } from '@/core/domain/service/schedule-service'
+import { PacienteGateway } from '../gateway/paciente.gateway'
 
 export class AgendaController {
   constructor (
     private readonly gateway: AgendaGateway,
-    private readonly doctorGateway: MedicoGateway
+    private readonly doctorGateway: MedicoGateway,
   ) {}
 
   async create (
@@ -36,10 +39,16 @@ export class AgendaController {
   }
 
   async schedule (
-    input: AgendaConsultaPacienteDto
+    input: AgendaConsultaPacienteDto,
+    scheduleService: ScheduleService,
+    gateways: Gateway,
+    pacienteGateway: PacienteGateway
   ): Promise<Agenda> {
     const useCase = new CreateConsultaPacienteUseCase(
-      this.gateway
+      this.gateway,
+      scheduleService,
+      gateways,
+      pacienteGateway
     )
 
     const agenda = await useCase.handle(input)

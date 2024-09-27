@@ -16,4 +16,8 @@ export class MedicoGateway {
   create (input: Medico): Promise<Medico> {
     return this.respository.create(input)
   }
+
+  findById (id: number): Promise<Medico | undefined> {
+    return this.respository.findById(id)
+  }
 }

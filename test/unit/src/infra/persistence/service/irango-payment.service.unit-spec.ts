@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import IRangoPaymentService from '@/infra/persistence/service/irango-payment.service'
+import IRangoPaymentService from '@/infra/persistence/service/schedule-sns.service'
 
 describe('IRangoPaymentService Class Tests', () => {
   let service:IRangoPaymentService

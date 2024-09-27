@@ -28,4 +28,12 @@ export default class PatientTypeormRepository implements IPacienteRepository {
 
     return patient ? new Paciente(patient.id, patient.userId) : undefined
   }
+
+  async findById(id: number): Promise<Paciente | undefined> {
+    const patient = await this.repository.findOneBy({
+      id
+    })
+
+    return patient ? new Paciente(patient.id, patient.userId) : undefined
+  }
 }

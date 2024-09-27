@@ -80,28 +80,8 @@ export class Environment {
     return process.env.AWS_SECRET_ACCESS_KEY || 'qualquercoisa'
   }
 
-  static get SNS_TOPIC_ORDER_CREATED () {
-    return process.env.SNS_TOPIC_ORDER_CREATED || 'arn:aws:sns:us-east-1:000000000000:fiap-irango-order_order-created_dev'
-  }
-
-  static get START_COOK_QUEUE () {
-    return process.env.START_COOK_QUEUE || 'fiap-irango-order_cooking-started_dev'
-  }
-
-  static get FINISH_COOK_QUEUE () {
-    return process.env.START_FINISH_QUEUE || 'fiap-irango-order_cooking-finished_dev'
-  }
-
-  static get CONFIRM_PAYMENT_QUEUE () {
-    return process.env.CONFIRM_PAYMENT_QUEUE || 'fiap-irango-order_payment-confirmed_dev'
-  }
-
-  static get CREATED_PAYMENT_QUEUE () {
-    return process.env.CREATED_PAYMENT_QUEUE || 'fiap-irango-order_payment-created_dev'
-  }
-
-  static get URL_QUEUE () {
-    return process.env.URL_QUEUE || 'http://localhost:4566/000000000000/'
+  static get SNS_FIAP_HEALTH_MED_API_APPOINTMENT_CREATED () {
+    return process.env.SNS_FIAP_HEALTH_MED_API_APPOINTMENT_CREATED || 'arn:aws:sns:us-east-1:000000000000:fiap-health-med-api_appointment-created_dev'
   }
 
   static get SECRET () {

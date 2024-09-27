@@ -12,4 +12,8 @@ export class PacienteGateway {
   findByUserId (userId: number): Promise<Paciente | undefined> {
     return this.respository.findByUserId(userId)
   }
+
+  findById (id: number): Promise<Paciente | undefined> {
+    return this.respository.findById(id)
+  }
 }

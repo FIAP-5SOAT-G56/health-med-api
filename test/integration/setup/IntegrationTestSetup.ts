@@ -8,7 +8,7 @@ import { agent } from 'supertest'
 import { IPaymentService } from '@/core/domain/services/ipayment.service'
 import AllExceptionFilter from '@/core/helpers/AllExceptionFilter'
 import ResponseTransformInterceptor from '@/core/helpers/ResponseTransformInterceptor'
-import IRangoPaymentService from '@/infra/persistence/service/irango-payment.service'
+import IRangoPaymentService from '@/infra/persistence/service/schedule-sns.service'
 import AppModule, { appModules } from '@/infra/web/nestjs/app.module'
 
 import FactoryUtils from '@/test/integration/setup/utils/FactoryUtils'

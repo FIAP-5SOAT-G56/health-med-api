@@ -27,7 +27,12 @@ import CreateAgendaRequest from './dto/agenda.create.request'
 import AgendaResponse from './dto/agenda.response'
 import AgendaMedicoUpdateDto from './dto/agenda.update.request'
 import ConsultaPacienteRequest from './dto/consulta.paciente.create.request'
-
+import { IScheduleServiceSymbol, ScheduleService } from '@/core/domain/service/schedule-service'
+import IPacienteRepository, { IPacienteRepository as IPacienteRepositorySymbol } from '@/core/domain/repositories/ipaciente.repository'
+import IUserRepository, { IUserRepository as IUserRepositorySymbol } from '@/core/domain/repositories/iusuario.repository'
+import { Gateway } from '@/core/operation/gateway/gateway'
+import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
+import { PacienteGateway } from '@/core/operation/gateway/paciente.gateway'
 @UseGuards(AuthGuard)
 @Controller('v1/agenda')
 @ApiTags('v1/agenda')
@@ -35,6 +40,9 @@ export class AgendController {
   constructor (
       @Inject(IAgendaRepositorySymbol) private readonly repository: IAgendaRepository,
       @Inject(IMedicoRepositorySymbol) private readonly doctorRepository: IMedicoRepository,
+      @Inject(IScheduleServiceSymbol) private readonly scheduleService: ScheduleService,
+      @Inject(IPacienteRepositorySymbol) private readonly patientRepository: IPacienteRepository,
+      @Inject(IUserRepositorySymbol) private readonly userRepository: IUserRepository,
     ) {}
 
   @Post()
@@ -115,7 +123,14 @@ export class AgendController {
     const gateway = new AgendaGateway(this.repository)
     const doctorGateway = new MedicoGateway(this.doctorRepository)
     const controller = new AgendaController(gateway, doctorGateway)
-    const output = await controller.schedule({ ...input, pacienteId: user.getKeyPatient() })
+    const gateways = new Gateway(new UsuarioGateway(this.userRepository), new MedicoGateway(this.doctorRepository))
+    const patientGateway =  new PacienteGateway(this.patientRepository)
+    const output = await controller.schedule(
+      { ...input, pacienteId: user.getKeyPatient() },  
+      this.scheduleService,
+      gateways,
+      patientGateway
+    )
 
     if (!output.id) {
       throw new HttpException(

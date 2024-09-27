@@ -6,7 +6,7 @@ import IPedidoRepository, {
   IPedidoRepository as IPedidoRepositorySymbol,
 } from '@/core/domain/repositories/ipedido.repository'
 import { IPaymentService } from '@/core/domain/services/ipayment.service'
-import IRangoPaymentService from '@/infra/persistence/service/irango-payment.service'
+import IRangoPaymentService from '@/infra/persistence/service/schedule-sns.service'
 import { Produto } from '@/infra/persistence/typeorm/entities/produto'
 import { Consumidor } from '@/infra/persistence/typeorm/entities/user'
 import CreatePedidoRequest from '@/infra/web/nestjs/pedidos/dto/create-pedido.request'
