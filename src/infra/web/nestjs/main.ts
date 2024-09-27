@@ -31,7 +31,7 @@ const configureSwagger = (app: INestApplication) => {
     .setTitle('Health Med API')
     .setDescription('Health Med API documentation')
     .setVersion('0.0.1')
-    .addBearerAuth(undefined, 'Mobile')
+    .addBearerAuth(undefined, 'Authorization')
     .build()
 
   const document = SwaggerModule.createDocument(app, swaggerOptions)

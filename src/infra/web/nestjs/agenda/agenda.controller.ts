@@ -47,6 +47,7 @@ const CONSULTA_CACHE_TTL = 1 * 60 * 1000 // 1 min
 const AGENDA_CACHE_TTL = 1 * 60 * 60 * 1000 // 1 min
 
 @UseGuards(AuthGuard)
+@ApiBearerAuth('Authorization')
 @Controller('v1/agenda')
 @ApiTags('v1/agenda')
 export class AgendController {
@@ -60,7 +61,6 @@ export class AgendController {
     ) {}
 
   @Post()
-  @ApiBearerAuth()
   @HttpCode(HttpStatus.CREATED)
   @Roles(ProfileTypeEnum.MEDICO)
   @ApiOperation({ summary: 'Criar Agenda' })
@@ -116,7 +116,6 @@ export class AgendController {
   }
 
   @Patch()
-  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   @Roles(ProfileTypeEnum.MEDICO)
   @UseGuards(RolesGuard)
