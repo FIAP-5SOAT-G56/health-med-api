@@ -3,6 +3,7 @@ import { Agendas } from '@/core/domain/entities/agendas'
 import BusinessException from '@/core/domain/errors/business-exception'
 import { AgendaGateway } from '@/core/operation/gateway/agenda.gateway'
 import { MedicoGateway } from '@/core/operation/gateway/medico.gateway'
+import { hasTimeConflicts } from '@/core/helpers/conflictArrayAgendaHelper';
 
 export default class CreateMedicoAgendasUseCase {
   constructor (
@@ -18,10 +19,22 @@ export default class CreateMedicoAgendasUseCase {
     }
     const agendas = new Agendas();
 
-    input.dates.forEach(date => {
-      agendas.push(doctor.getId(), true, date.startAt, date.endAt)
-    })
+    var conflict = hasTimeConflicts(input.dates);
 
+    if (conflict) {
+      throw new BusinessException('Conflito de Horário.')
+    }
+
+    for (const interval of input.dates) {
+      conflict = await this.gateway.agendaConflict(doctor.id, interval.startAt, interval.endAt);
+
+      if (conflict) {
+        throw new BusinessException('Conflito de Horário.')
+      }
+
+      agendas.push(doctor.getId(), true, interval.startAt, interval.endAt)
+
+    }
 
     return await this.gateway.creates(agendas)
   }

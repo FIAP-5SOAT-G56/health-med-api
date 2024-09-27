@@ -15,6 +15,7 @@ export default class AgendaTypeormRepository implements IAgendaRepository {
   ) {}
 
   async create (input: Agenda): Promise<Agenda> {
+
     const data = await this.repository.save({
       doctorId: input.doctorId,
       patient_id: input.pacienteId,
@@ -57,5 +58,34 @@ export default class AgendaTypeormRepository implements IAgendaRepository {
 
   async creates(agendas: Agendas): Promise<void> {
    await this.repository.save(agendas.get())
+  }
+
+  async agendaConflict(doctorId: number, startAt: Date, endAt: Date): Promise<boolean> {
+    
+    let startDateAt = new Date(startAt);
+    let endDateAt = new Date(endAt);
+
+    const conflictAgenda = await this.repository
+      .createQueryBuilder('agenda')
+      .where('agenda.doctorId = :doctorId', { doctorId })
+      .andWhere('agenda.startAt < :endDateAt AND agenda.endAt > :startDateAt', { startDateAt, endDateAt })
+      .getMany();
+
+    return conflictAgenda.length > 0;
+  }
+
+  async agendaUpdateConflict(agendaId: number, doctorId: number, startAt: Date, endAt: Date): Promise<boolean> {
+
+    let startDateAt = new Date(startAt);
+    let endDateAt = new Date(endAt);
+
+    const conflictAgenda = await this.repository
+      .createQueryBuilder('agenda')
+      .where('agenda.doctorId = :doctorId', { doctorId })
+      .andWhere('agenda.id != :agendaId', {agendaId})
+      .andWhere('agenda.startAt < :endDateAt AND agenda.endAt > :startDateAt', { startDateAt, endDateAt })
+      .getMany();
+
+    return conflictAgenda.length > 0;
   }
 }

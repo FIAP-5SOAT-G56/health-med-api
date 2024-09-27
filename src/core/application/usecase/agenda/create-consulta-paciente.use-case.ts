@@ -21,6 +21,10 @@ export default class CreateConsultaPacienteUseCase {
       throw new BusinessException('Agenda não disponivel.')
     }
 
+    if(!agenda.liberado) {
+      throw new BusinessException('Horário Indisponível.')
+    }
+
     const updateAgenda = Agenda.create(agenda.doctorId, false, agenda.startAt, agenda.endAt, agenda.id, input.pacienteId)
 
     const agendaSave = await this.gateway.update(updateAgenda)
