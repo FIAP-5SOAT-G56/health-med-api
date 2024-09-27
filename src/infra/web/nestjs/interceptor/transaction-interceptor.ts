@@ -13,9 +13,7 @@ export class TransactionInterceptor implements NestInterceptor {
     private readonly transaction: Transaction
   ) {}
 
-  async intercept (_: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
-    console.log('dd')
-
+  async intercept(_: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
     const queryRunner = this.dataSource.createQueryRunner()
 
     await queryRunner.startTransaction()
@@ -23,7 +21,6 @@ export class TransactionInterceptor implements NestInterceptor {
     return next.handle().pipe(
       // concatMap gets called when route handler completes successfully
       concatMap(async (data) => {
-        console.log('sdfdf')
         await queryRunner.commitTransaction()
         return data
       }),

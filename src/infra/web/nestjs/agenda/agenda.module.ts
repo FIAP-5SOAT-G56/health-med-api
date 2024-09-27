@@ -7,6 +7,7 @@ import { IMedicoRepository } from '@/core/domain/repositories/imedico.repository
 import { IPacienteRepository } from '@/core/domain/repositories/ipaciente.repository'
 import { IUserRepository } from '@/core/domain/repositories/iusuario.repository'
 import { IScheduleServiceSymbol } from '@/core/domain/service/schedule-service'
+import Mutex from '@/core/helpers/Mutex'
 import ScheduleSNSService from '@/infra/persistence/service/schedule-sns.service'
 import { Agenda } from '@/infra/persistence/typeorm/entities/agenda'
 import { Doctor } from '@/infra/persistence/typeorm/entities/doctor'
@@ -33,12 +34,13 @@ import { AgendController } from '@/infra/web/nestjs/agenda/agenda.controller'
     { provide: IAgendaRepository, useClass: AgendaTypeormRepository },
     { provide: IScheduleServiceSymbol, useClass: ScheduleSNSService },
     { provide: IUserRepository, useClass: UserTypeormRepository },
+    Mutex,
   ],
   controllers: [
     AgendController
   ],
   exports: [
-    IAgendaRepository
+    IAgendaRepository,
   ]
 })
 export class AgendaModule {}

@@ -21,6 +21,7 @@ import IPacienteRepository, { IPacienteRepository as IPacienteRepositorySymbol }
 import IUserRepository, { IUserRepository as IUserRepositorySymbol } from '@/core/domain/repositories/iusuario.repository'
 import { IScheduleServiceSymbol, ScheduleService } from '@/core/domain/service/schedule-service'
 import AppCache from '@/core/helpers/AppCache'
+import Mutex from '@/core/helpers/Mutex'
 import { AgendaController } from '@/core/operation/controllers/agenda.controller'
 import { AgendaGateway } from '@/core/operation/gateway/agenda.gateway'
 import { Gateway } from '@/core/operation/gateway/gateway'
@@ -42,8 +43,8 @@ import CreateAgendasRequest from './dto/agendas.create.request'
 import ConsultaPacienteRequest from './dto/consulta.paciente.create.request'
 
 const AGENDA_CACHE_KEY = (doctorId: number) => 'cache:agenda:doctorId=' + doctorId
-const CONSULTA_GUARD_KEY = (agendaId: number) => 'cache:consulta:key=' + agendaId
-const CONSULTA_CACHE_TTL = 1 * 60 * 1000 // 1 min
+const AGENDA_MUTEX_KEY = (agendaId: number) => 'mutex:agenda=' + agendaId
+const AGENDA_MUTEX_TTL_IN_SECONDS = 60 // 1 min
 const AGENDA_CACHE_TTL = 1 * 60 * 60 * 1000 // 1 min
 
 @UseGuards(AuthGuard)
@@ -58,6 +59,7 @@ export class AgendController {
       @Inject(IPacienteRepositorySymbol) private readonly patientRepository: IPacienteRepository,
       @Inject(IUserRepositorySymbol) private readonly userRepository: IUserRepository,
       private appCache: AppCache,
+    private mutex: Mutex
     ) {}
 
   @Post()
@@ -173,9 +175,10 @@ export class AgendController {
     const gateways = new Gateway(new UsuarioGateway(this.userRepository), new MedicoGateway(this.doctorRepository))
     const patientGateway = new PacienteGateway(this.patientRepository)
 
-    const cached = await this.appCache.get<number>(CONSULTA_GUARD_KEY(input.agendaId))
+    const mutexKey = AGENDA_MUTEX_KEY(input.agendaId)
+    const cached = await this.mutex.acquire(mutexKey, AGENDA_MUTEX_TTL_IN_SECONDS)
 
-    if (cached) {
+    if (!cached) {
       throw new HttpException(
         {
           status: HttpStatus.CONFLICT,
@@ -184,8 +187,6 @@ export class AgendController {
         HttpStatus.NOT_FOUND
       )
     }
-
-    await this.appCache.set(CONSULTA_GUARD_KEY(input.agendaId), input.agendaId, CONSULTA_CACHE_TTL)
 
     const output = await controller.schedule(
       { ...input, pacienteId: user.getKeyPatient() },
@@ -204,7 +205,8 @@ export class AgendController {
       )
     }
 
-    await this.appCache.del(AGENDA_CACHE_KEY(output.doctorId))
+    await this.mutex.release(mutexKey)
+
     return {
       id: output.id,
       doctorId: output.doctorId,
