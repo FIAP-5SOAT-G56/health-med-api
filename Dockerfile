@@ -30,4 +30,6 @@ RUN npm ci --include=dev --ignore-scripts
 COPY ./ ./
 RUN npm run build
 
-CMD [ "sh", "-c", "npm run migration:run && npm run start:prod" ]
+COPY ./scripts/start.sh /scripts/start.sh
+RUN ["chmod", "+x", "/scripts/start.sh"]
+ENTRYPOINT ["/scripts/start.sh"]
