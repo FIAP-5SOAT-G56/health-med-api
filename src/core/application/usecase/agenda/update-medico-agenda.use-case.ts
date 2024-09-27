@@ -15,8 +15,6 @@ export default class UpdateMedicoAgendaUseCase {
       throw new BusinessException('Agenda não registrada.')
     }
 
-    console.log(input)
-
     let conflict = await this.gateway.agendaUpdateConflict(input.agendaId, agenda.doctorId, input.startAt, input.endAt);
 
     if (conflict) {

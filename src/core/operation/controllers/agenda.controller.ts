@@ -1,9 +1,11 @@
 import CreateConsultaPacienteUseCase from '@/core/application/usecase/agenda/create-consulta-paciente.use-case'
 import CreateMedicoAgendaUseCase from '@/core/application/usecase/agenda/create-medico-agenda.use-case'
 import UpdateMedicoAgendaUseCase from '@/core/application/usecase/agenda/update-medico-agenda.use-case'
+import ListMedicoAgendaUseCase from '@/core/application/usecase/agenda/list-medico-agenda.use-case'
 import AgendaConsultaPacienteDto from '@/core/domain/dto/input/agenda-consulta-paciente.dto'
 import AgendaMedicoCreateDto from '@/core/domain/dto/input/agenda-medico-create.dto'
 import AgendaMedicoUpdateDto from '@/core/domain/dto/input/agenda-medico-update.dto'
+import AgendaMedicoListDto from '@/core/domain/dto/input/agenda-medico-list.dto'
 import Agenda from '@/core/domain/entities/agenda'
 
 import { AgendaGateway } from '../gateway/agenda.gateway'
@@ -50,6 +52,18 @@ export class AgendaController {
       gateways,
       pacienteGateway
     )
+
+    const agenda = await useCase.handle(input)
+
+    return agenda
+  }
+
+  async list (
+    input: AgendaMedicoListDto
+  ): Promise<Agenda[]> {
+    const useCase = new ListMedicoAgendaUseCase(
+      this.gateway
+    );
 
     const agenda = await useCase.handle(input)
 

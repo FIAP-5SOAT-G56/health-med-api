@@ -13,7 +13,7 @@ export class AgendaGateway {
     return this.repository.save(input)
   }
 
-  findByDoctor (doctorId: number): Promise<Agenda | undefined> {
+  findByDoctor (doctorId: number): Promise<Agenda[] | undefined> {
     return this.repository.findByDoctor(doctorId)
   }
 

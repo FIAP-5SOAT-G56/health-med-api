@@ -7,6 +7,8 @@ import {
   Inject,
   Post,
   Patch,
+  Get,
+  Param,
   UseGuards
 } from '@nestjs/common'
 import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiHeader, ApiOperation, ApiTags } from '@nestjs/swagger'
@@ -25,6 +27,7 @@ import { User } from '../decorators/user.decorator'
 import { UserEntity } from '../entities/user.entities'
 import CreateAgendaRequest from './dto/agenda.create.request'
 import AgendaResponse from './dto/agenda.response'
+import { AgendaListResponse, AgendaListElem } from './dto/agenda.list.response'
 import AgendaMedicoUpdateDto from './dto/agenda.update.request'
 import ConsultaPacienteRequest from './dto/consulta.paciente.create.request'
 import { IScheduleServiceSymbol, ScheduleService } from '@/core/domain/service/schedule-service'
@@ -151,4 +154,39 @@ export class AgendController {
       endAt: output.endAt
     }
   }
+
+  @Get(':id')
+  @ApiHeader({
+    name: 'authorization'
+  })
+  @HttpCode(HttpStatus.FOUND)
+  @ApiOperation({ summary: 'Listar Agenda Médico' })
+  @ApiCreatedResponse({ description: 'Agenda encontradas', type: AgendaListResponse })
+  async list (@Param('id') id: number): Promise<AgendaListResponse> {
+    const gateway = new AgendaGateway(this.repository)
+    const doctorGateway = new MedicoGateway(this.doctorRepository)
+    const controller = new AgendaController(gateway, doctorGateway)
+
+    const output = await controller.list({
+      doctorId: id
+    });
+
+    console.log(output)
+
+    if (output.length == 0) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: 'Agenda não registrada'
+        },
+        HttpStatus.NOT_FOUND
+      )
+    }
+
+    return {
+      doctorId: output[0].doctorId,
+      agenda: output.map(agenda => new AgendaListElem(agenda.liberado, agenda.startAt, agenda.endAt))
+    }
+  }
+
 }

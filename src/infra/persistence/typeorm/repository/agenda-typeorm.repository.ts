@@ -40,12 +40,12 @@ export default class AgendaTypeormRepository implements IAgendaRepository {
     return Agenda.create(data.doctorId, data.liberada, data.startAt, data.endAt, data.id, data.patientId)
   }
 
-  async findByDoctor (doctorId: number): Promise<Agenda | undefined> {
-    const agenda = await this.repository.findOneBy({
+  async findByDoctor (doctorId: number): Promise<Agenda[] | undefined> {
+    const agendas = await this.repository.findBy({
       doctorId
     })
 
-    return agenda ? Agenda.create(agenda.doctorId, agenda.liberada, agenda.startAt, agenda.endAt, agenda.id, agenda.patientId) : undefined
+    return agendas.map(agenda => Agenda.create(agenda.doctorId, agenda.liberada, agenda.startAt, agenda.endAt, agenda.id, agenda.patientId));
   }
 
   async findById (agendaId: number): Promise<Agenda | undefined> {
