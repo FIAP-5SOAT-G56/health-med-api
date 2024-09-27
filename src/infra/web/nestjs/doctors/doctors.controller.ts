@@ -38,7 +38,7 @@ export class DoctorsController {
   @Post()
   @Public()
   @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Criar Médico' })
+  @ApiOperation({ summary: 'Add Médico a um usuario' })
   @ApiBody({ type: DoctorRequest })
   @ApiCreatedResponse({ description: 'Registro criado', type: DoctorResponse })
   async create (
@@ -52,11 +52,11 @@ export class DoctorsController {
     return output
   }
 
-  @Post()
+  @Post('/user')
   @Public()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Criar Médico e usuario' })
-  @ApiBody({ type: DoctorRequest })
+  @ApiBody({ type: DoctorWithUserRequest })
   @ApiCreatedResponse({ description: 'Registro criado', type: DoctorResponse })
   async createDoctorWithUser (
     @Body() input: DoctorWithUserRequest
