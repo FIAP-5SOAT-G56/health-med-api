@@ -33,7 +33,7 @@ describe('Test for static methods of Environment class', () => {
 
   it('test get PORT method default value', () => {
     delete process.env.PORT
-    expect(Environment.PORT).toEqual(3001)
+    expect(Environment.PORT).toEqual(3000)
   })
 
   it('test get SENTRY_DSN method', () => {

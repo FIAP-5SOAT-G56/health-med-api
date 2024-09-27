@@ -135,6 +135,30 @@ jobs:
       run: |
         aws ecs describe-task-definition --task-definition ${TASK_DEFINITION_FAMILY} --query taskDefinition > task-definition.json
 
+    - name: Load AWS secrets
+      id: load_secrets
+      uses: aws-actions/aws-secretsmanager-get-secrets@v2
+      with:
+        secret-ids: |
+          TD_, ${{ secrets.AWS_API_SECRETS_ID }}
+        parse-json-secrets: true
+    
+    - name: Add secrets to Task Definition
+      env:
+        DB_HOSTNAME: ${{ secrets.TD_DB_HOSTNAME }}
+        DB_DATABASE: ${{ secrets.TD_DB_DATABASE }}
+        DB_USER: ${{ secrets.TD_DB_USER }}
+        DB_PASSWORD: ${{ secrets.TD_DB_PASSWORD }}
+        REDIS_HOSTNAME: ${{ secrets.TD_REDIS_HOSTNAME }}
+        JWT_SECRET: ${{ secrets.TD_JWT_SECRET }}
+      run: |
+        sed -i "s/<db_hostname>/$DB_HOSTNAME/g" task-definition.json
+        sed -i "s/<db_database>/$DB_DATABASE/g" task-definition.json
+        sed -i "s/<db_user>/$DB_USER/g" task-definition.json
+        sed -i "s/<db_password>/$DB_PASSWORD/g" task-definition.json
+        sed -i "s/<redis_hostname>/$REDIS_HOSTNAME/g" task-definition.json
+        sed -i "s/<jwt_secret>/$JWT_SECRET/g" task-definition.json
+
     - name: Fill in the new image ID in the Amazon ECS task definition
       id: task_def
       uses: aws-actions/amazon-ecs-render-task-definition@v1
