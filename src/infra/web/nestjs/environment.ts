@@ -81,7 +81,7 @@ export class Environment {
   }
 
   static get SNS_FIAP_HEALTH_MED_API_APPOINTMENT_CREATED () {
-    return process.env.SNS_FIAP_HEALTH_MED_API_APPOINTMENT_CREATED || 'arn:aws:sns:us-east-1:000000000000:fiap-health-med-api_appointment-created_dev'
+    return process.env.SNS_FIAP_HEALTH_MED_API_APPOINTMENT_CREATED || 'arn:aws:sns:us-east-1:166954469144:fiap-health-med-api_appointment-created'
   }
 
   static get SECRET () {
