@@ -21,11 +21,11 @@ export default class SignInUseCase {
   async handle (input: SignInDto): Promise<JwtDto> {
     const user = await this.gateway.usuario.findByEmail(new Email(input.email))
     if (!user) {
-      throw new BusinessException('Invalid')
+      throw new BusinessException('Usuario não encontrada')
     }
 
     if (!user.password.validate(input.password)) {
-      throw new BusinessException('Invalid')
+      throw new BusinessException('Password Invalid')
     }
     const profiles: Profiles = {}
     const doctor = await this.gateway.medico.findByUserId(user.getId())
