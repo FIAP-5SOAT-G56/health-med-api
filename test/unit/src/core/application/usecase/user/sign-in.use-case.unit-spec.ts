@@ -140,6 +140,6 @@ describe('SignInUseCase Test Case', () => {
 
     await expect(async () => {
       await useCase.handle(dto)
-    }).rejects.toThrow(new BusinessException('Invalid'))
+    }).rejects.toThrow(new BusinessException('Usuario não encontrada'))
   })
 })
