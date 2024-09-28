@@ -49,8 +49,8 @@ cp .env.example .env
 cp .env.local.test.example .env.test
 docker compose build --progress=plain
 docker compose up
-docker compose exec -it irango-order-api pnpm migration:run
-docker compose exec -it irango-order-api pnpm seed:run
+docker compose exec -it health-med-api pnpm migration:run
+docker compose exec -it health-med-api pnpm seed:run
 ```
 
 ## Start project using npm

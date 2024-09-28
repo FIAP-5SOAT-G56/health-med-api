@@ -7,7 +7,7 @@ CONTAINER_MYSQL = local-mysql
 CONTAINER_REDIS = local-redis
 CONTAINER_BACKEND = health-med-api
 
-DATABASE = irango_order
+DATABASE = health_med
 
 IMAGE ?= matob/health-med-api
 
