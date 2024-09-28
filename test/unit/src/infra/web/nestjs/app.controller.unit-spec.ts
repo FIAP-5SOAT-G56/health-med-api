@@ -12,7 +12,7 @@ describe('Test for app controller class', () => {
   })
 
   it('test app method', () => {
-    expect(controller.app()).toEqual('iRango Order API')
+    expect(controller.app()).toEqual('Health&Med API')
   })
 
   it('test healthCheck method', () => {
