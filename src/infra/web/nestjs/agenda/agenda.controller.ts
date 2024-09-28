@@ -229,12 +229,6 @@ export class AgendController {
     const doctorGateway = new MedicoGateway(this.doctorRepository)
     const controller = new AgendaController(gateway, doctorGateway)
 
-    const cached = await this.appCache.get<AgendaListResponse>(AGENDA_CACHE_KEY(id))
-
-    if (cached) {
-      return cached
-    }
-
     const output = await controller.list({
       doctorId: id
     })
