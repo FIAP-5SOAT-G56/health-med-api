@@ -32,4 +32,4 @@ RUN npm run build
 
 COPY ./scripts/start.sh /scripts/start.sh
 RUN ["chmod", "+x", "/scripts/start.sh"]
-ENTRYPOINT ["/scripts/start.sh"]
+ENTRYPOINT ["sh", "/scripts/start.sh"]
