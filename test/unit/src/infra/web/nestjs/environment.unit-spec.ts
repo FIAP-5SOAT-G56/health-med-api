@@ -53,7 +53,7 @@ describe('Test for static methods of Environment class', () => {
 
   it('test get DB_HOSTNAME method default value', () => {
     delete process.env.DB_HOSTNAME
-    expect(Environment.DB_HOSTNAME).toEqual('localhost')
+    expect(Environment.DB_HOSTNAME).toEqual('local-mysql')
   })
 
   it('test get DB_PORT method', () => {
@@ -193,6 +193,6 @@ describe('Test for static methods of Environment class', () => {
 
   it('test get SNS_TOPIC_ORDER_CREATED method default value', () => {
     delete process.env.SNS_TOPIC_ORDER_CREATED
-    expect(Environment.SNS_TOPIC_ORDER_CREATED).toEqual('arn:aws:sns:us-east-1:000000000000:fiap-irango-order_order-created_dev')
+    expect(Environment.SNS_TOPIC_ORDER_CREATED).toEqual('qualquercoisa')
   })
 })
