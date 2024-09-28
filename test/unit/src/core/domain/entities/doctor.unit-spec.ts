@@ -13,7 +13,7 @@ describe('Test Medico Entity Class', () => {
 
   it('Testing getId method', () => {
     const doctor = Medico.create(1, '')
-    let id = doctor.getId()
-    expect(id).toBe(0);
+    const id = doctor.getId()
+    expect(id).toBe(0)
   })
 })

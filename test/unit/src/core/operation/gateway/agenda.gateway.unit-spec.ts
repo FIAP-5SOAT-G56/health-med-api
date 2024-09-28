@@ -27,14 +27,13 @@ describe('Test AgendaGateway class', () => {
   })
 
   it('Test create method', async () => {
-
     const agenda = new Agenda(
-        1,
-        1,
-        1,
-        false,
-        new Date("October 15, 2024 11:22:00"),
-        new Date("October 15, 2024 12:22:00")
+      1,
+      1,
+      1,
+      false,
+      new Date('October 15, 2024 11:22:00'),
+      new Date('October 15, 2024 12:22:00')
     )
 
     mockRepository.create.mockResolvedValue(agenda)
@@ -47,10 +46,9 @@ describe('Test AgendaGateway class', () => {
   })
 
   it('Test creates method', async () => {
+    const agendas = new Agendas()
 
-    const agendas = new Agendas();
-
-    agendas.push(1, false, new Date("October 15, 2024 11:22:00"), new Date("October 15, 2024 12:22:00"));
+    agendas.push(1, false, new Date('October 15, 2024 11:22:00'), new Date('October 15, 2024 12:22:00'))
 
     await gateway.creates(agendas)
 
@@ -60,12 +58,12 @@ describe('Test AgendaGateway class', () => {
 
   it('Test update method', async () => {
     const agenda = new Agenda(
-        1,
-        1,
-        1,
-        false,
-        new Date("October 15, 2024 11:22:00"),
-        new Date("October 15, 2024 12:22:00")
+      1,
+      1,
+      1,
+      false,
+      new Date('October 15, 2024 11:22:00'),
+      new Date('October 15, 2024 12:22:00')
     )
 
     mockRepository.save.mockResolvedValue(agenda)
@@ -78,14 +76,13 @@ describe('Test AgendaGateway class', () => {
   })
 
   it('Test findByDoctor method', async () => {
-
     const agenda = new Agenda(
-        1,
-        1,
-        1,
-        false,
-        new Date("October 15, 2024 11:22:00"),
-        new Date("October 15, 2024 12:22:00")
+      1,
+      1,
+      1,
+      false,
+      new Date('October 15, 2024 11:22:00'),
+      new Date('October 15, 2024 12:22:00')
     )
 
     mockRepository.findByDoctor.mockResolvedValue([agenda])
@@ -97,16 +94,14 @@ describe('Test AgendaGateway class', () => {
     expect(result).toEqual([agenda])
   })
 
-
-
   it('Test findById method', async () => {
     const agenda = new Agenda(
-        1,
-        1,
-        1,
-        false,
-        new Date("October 15, 2024 11:22:00"),
-        new Date("October 15, 2024 12:22:00")
+      1,
+      1,
+      1,
+      false,
+      new Date('October 15, 2024 11:22:00'),
+      new Date('October 15, 2024 12:22:00')
     )
 
     mockRepository.findById.mockResolvedValue(agenda)
@@ -119,43 +114,40 @@ describe('Test AgendaGateway class', () => {
   })
 
   it('Test agendaConflict method', async () => {
-
     mockRepository.agendaConflict.mockResolvedValue(true)
 
     const result = await gateway.agendaConflict(
-        1,
-        new Date("October 15, 2024 11:22:00"),
-        new Date("October 15, 2024 12:22:00")
-    );
+      1,
+      new Date('October 15, 2024 11:22:00'),
+      new Date('October 15, 2024 12:22:00')
+    )
 
     expect(mockRepository.agendaConflict).toHaveBeenCalledTimes(1)
     expect(result).toEqual(true)
   })
 
   it('Test agendaPatientConflict method', async () => {
-
     mockRepository.agendaPatientConflict.mockResolvedValue(true)
 
     const result = await gateway.agendaPatientConflict(
-        1,
-        new Date("October 15, 2024 11:22:00"),
-        new Date("October 15, 2024 12:22:00")
-    );
+      1,
+      new Date('October 15, 2024 11:22:00'),
+      new Date('October 15, 2024 12:22:00')
+    )
 
     expect(mockRepository.agendaPatientConflict).toHaveBeenCalledTimes(1)
     expect(result).toEqual(true)
   })
 
   it('Test agendaUpdateConflict method', async () => {
-
     mockRepository.agendaUpdateConflict.mockResolvedValue(true)
 
     const result = await gateway.agendaUpdateConflict(
-        1,
-        1,
-        new Date("October 15, 2024 11:22:00"),
-        new Date("October 15, 2024 12:22:00")
-    );
+      1,
+      1,
+      new Date('October 15, 2024 11:22:00'),
+      new Date('October 15, 2024 12:22:00')
+    )
 
     expect(mockRepository.agendaUpdateConflict).toHaveBeenCalledTimes(1)
     expect(result).toEqual(true)

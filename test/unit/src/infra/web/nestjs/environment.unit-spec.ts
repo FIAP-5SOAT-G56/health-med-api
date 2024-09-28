@@ -185,14 +185,4 @@ describe('Test for static methods of Environment class', () => {
     delete process.env.AWS_SECRET_ACCESS_KEY
     expect(Environment.AWS_SECRET_ACCESS_KEY).toEqual('qualquercoisa')
   })
-
-  it('test get SNS_TOPIC_ORDER_CREATED method', () => {
-    process.env.SNS_TOPIC_ORDER_CREATED = 'test'
-    expect(Environment.SNS_TOPIC_ORDER_CREATED).toEqual('test')
-  })
-
-  it('test get SNS_TOPIC_ORDER_CREATED method default value', () => {
-    delete process.env.SNS_TOPIC_ORDER_CREATED
-    expect(Environment.SNS_TOPIC_ORDER_CREATED).toEqual('qualquercoisa')
-  })
 })

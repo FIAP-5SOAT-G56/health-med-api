@@ -1,8 +1,8 @@
 import Usuario from '@/core/domain/entities/usuario'
 import Repository from '@/core/domain/repositories/iusuario.repository'
-import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
 import Cpf from '@/core/domain/value-object/Cpf'
 import Email from '@/core/domain/value-object/email'
+import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
 
 describe('Test UsuarioGateway class', () => {
   let gateway:UsuarioGateway
@@ -25,7 +25,6 @@ describe('Test UsuarioGateway class', () => {
   })
 
   it('Test create method', async () => {
-
     const user = await Usuario.create('Test Name', 'test@test.com', '905.489.213-77', '123456789')
 
     mockRepository.create.mockResolvedValue(user)
@@ -45,8 +44,7 @@ describe('Test UsuarioGateway class', () => {
   })
 
   it('Test findByEmail method', async () => {
-
-    const email = new Email('test@test.com');
+    const email = new Email('test@test.com')
     const user = await Usuario.create('Test Name', 'test@test.com', '905.489.213-77', '123456789')
 
     mockRepository.findByEmail.mockResolvedValue(user)
@@ -59,7 +57,6 @@ describe('Test UsuarioGateway class', () => {
   })
 
   it('Test findByCpf method', async () => {
-
     const cpf = new Cpf('57965568438')
     const user = await Usuario.create('Test Name', 'test@test.com', '57965568438', '123456789')
 
@@ -72,8 +69,6 @@ describe('Test UsuarioGateway class', () => {
     expect(result).toEqual(user)
   })
 
-
-
   it('Test findById method', async () => {
     const user = await Usuario.create('Test Name', 'test@test.com', '905.489.213-77', '123456789')
 
@@ -85,5 +80,4 @@ describe('Test UsuarioGateway class', () => {
     expect(mockRepository.findById).toHaveBeenCalledTimes(1)
     expect(result).toEqual(user)
   })
-
 })

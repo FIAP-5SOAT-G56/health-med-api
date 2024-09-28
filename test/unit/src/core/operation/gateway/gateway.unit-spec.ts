@@ -1,15 +1,14 @@
 import Repository from '@/core/domain/repositories/imedico.repository'
 import UsuarioRepository from '@/core/domain/repositories/iusuario.repository'
+import { Gateway } from '@/core/operation/gateway/gateway'
 import { MedicoGateway } from '@/core/operation/gateway/medico.gateway'
 import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
-import { Gateway } from '@/core/operation/gateway/gateway'
 
 describe('Test UsuarioGateway class', () => {
   let gateway:Gateway
   let mockUserRepository:jest.Mocked<UsuarioRepository>
   let mockDocRepository:jest.Mocked<Repository>
   beforeEach(() => {
-
     mockDocRepository = {
       create: jest.fn(),
       findById: jest.fn(),
@@ -31,5 +30,4 @@ describe('Test UsuarioGateway class', () => {
   it('Testing class constructor', () => {
     expect(gateway).toBeInstanceOf(Gateway)
   })
-
 })

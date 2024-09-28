@@ -31,9 +31,9 @@ describe('Test for MedicoController Class', () => {
 
   it('create method test', async () => {
     const createDto: MedicoCreateDto = {
-        userId: 1,
-        crm: ''
-    };
+      userId: 1,
+      crm: ''
+    }
 
     const doctor = Medico.create(1, '')
 
@@ -48,23 +48,21 @@ describe('Test for MedicoController Class', () => {
 
   it('createDoctorWithUser method test', async () => {
     const dto: DoctorWithCreateDto = {
-        crm: '',
-        name: '',
-        email: '',
-        cpf: '',
-        password: ''
-    };
+      crm: '',
+      name: '',
+      email: '',
+      cpf: '',
+      password: ''
+    }
 
-    const doctor = Medico.create(1, '');
+    const doctor = Medico.create(1, '')
 
     mockUseCaseCreateDoctorHandle.mockResolvedValue(doctor)
 
-    const result = await controller.createDoctorWithUser(dto);
+    const result = await controller.createDoctorWithUser(dto)
 
     expect(mockUseCaseCreateDoctorHandle).toHaveBeenCalledTimes(1)
     expect(mockUseCaseCreateDoctorHandle).toHaveBeenCalledWith(dto)
     expect(result).toEqual(doctor)
   })
-
-
 })

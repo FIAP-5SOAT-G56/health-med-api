@@ -40,8 +40,8 @@ describe('Test for PacienteController Class', () => {
 
   it('create method test', async () => {
     const createDto: PacienteCreateDto = {
-        userId: 1
-    };
+      userId: 1
+    }
 
     const patient = Paciente.create(1)
 
@@ -56,22 +56,20 @@ describe('Test for PacienteController Class', () => {
 
   it('createPatientrWithUser method test', async () => {
     const dto: PatientWithCreateDto = {
-        name: '',
-        email: '',
-        cpf: '',
-        password: ''
-    };
+      name: '',
+      email: '',
+      cpf: '',
+      password: ''
+    }
 
     const user = await Usuario.buildExistingUsuario(1, 'Test Name', 'test@test.com', '905.489.213-77', '12756312623562', '219837128937912')
 
     mockUseCaseCreatePatientHandle.mockResolvedValue(user)
 
-    const result = await controller.createPatientrWithUser(dto);
+    const result = await controller.createPatientrWithUser(dto)
 
     expect(mockUseCaseCreatePatientHandle).toHaveBeenCalledTimes(1)
     expect(mockUseCaseCreatePatientHandle).toHaveBeenCalledWith(dto)
     expect(result).toEqual(user)
   })
-
-
 })

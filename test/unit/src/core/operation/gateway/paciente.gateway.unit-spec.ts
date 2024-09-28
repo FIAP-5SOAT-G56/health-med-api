@@ -21,7 +21,6 @@ describe('Test PacienteGateway class', () => {
   })
 
   it('Test create method', async () => {
-
     const patient = Paciente.create(1)
 
     mockRepository.create.mockResolvedValue(patient)
@@ -34,7 +33,6 @@ describe('Test PacienteGateway class', () => {
   })
 
   it('Test findByUserId method', async () => {
-
     const patient = Paciente.create(1)
 
     mockRepository.findByUserId.mockResolvedValue(patient)
@@ -45,7 +43,6 @@ describe('Test PacienteGateway class', () => {
     expect(mockRepository.findByUserId).toHaveBeenCalledTimes(1)
     expect(result).toEqual(patient)
   })
-
 
   it('Test findById method', async () => {
     const patient = Paciente.create(1)
@@ -58,5 +55,4 @@ describe('Test PacienteGateway class', () => {
     expect(mockRepository.findById).toHaveBeenCalledTimes(1)
     expect(result).toEqual(patient)
   })
-
 })

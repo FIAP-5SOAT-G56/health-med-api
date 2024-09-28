@@ -13,7 +13,7 @@ describe('Test Paciente Entity Class', () => {
 
   it('Testing getId method', () => {
     const patient = Paciente.create(1)
-    let id = patient.getId()
-    expect(id).toBe(0);
+    const id = patient.getId()
+    expect(id).toBe(0)
   })
 })

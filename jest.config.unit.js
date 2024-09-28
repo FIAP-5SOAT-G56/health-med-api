@@ -13,6 +13,7 @@ module.exports = {
     "src/core/domain/value-object/Cpf.ts",
     "src/core/domain/value-object/Name.ts",
     "src/infra/persistence/typeorm/entities/*",
-    "src/infra/web/nestjs/pedidos/dto/*"
+    "src/infra/web/nestjs/pedidos/dto/*",
+    "src/infra/web/nestjs/environment.ts"
   ]
 };

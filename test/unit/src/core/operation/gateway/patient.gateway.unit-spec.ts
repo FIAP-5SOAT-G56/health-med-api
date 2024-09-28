@@ -1,21 +1,20 @@
+import Usuario from '@/core/domain/entities/usuario'
 import Repository from '@/core/domain/repositories/ipaciente.repository'
 import UsuarioRepository from '@/core/domain/repositories/iusuario.repository'
-import { PacienteGateway } from '@/core/operation/gateway/paciente.gateway'
-import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
-import { PatientGateway } from '@/core/operation/gateway/patient.gateway'
-import Usuario from '@/core/domain/entities/usuario'
 import Cpf from '@/core/domain/value-object/Cpf'
+import { PacienteGateway } from '@/core/operation/gateway/paciente.gateway'
+import { PatientGateway } from '@/core/operation/gateway/patient.gateway'
+import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
 
 describe('Test UsuarioGateway class', () => {
   let gateway:PatientGateway
   let mockUserRepository:jest.Mocked<UsuarioRepository>
   let mockPatientRepository:jest.Mocked<Repository>
   beforeEach(() => {
-
     mockPatientRepository = {
-        create: jest.fn(),
-        findById: jest.fn(),
-        findByUserId: jest.fn(),
+      create: jest.fn(),
+      findById: jest.fn(),
+      findByUserId: jest.fn(),
     }
 
     mockUserRepository = {
@@ -45,5 +44,4 @@ describe('Test UsuarioGateway class', () => {
     expect(mockUserRepository.findByCpf).toHaveBeenCalledTimes(1)
     expect(result).toEqual(user)
   })
-
 })

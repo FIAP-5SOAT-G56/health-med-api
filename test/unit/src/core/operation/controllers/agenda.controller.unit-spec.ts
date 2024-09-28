@@ -10,12 +10,11 @@ import AgendaMedicoUpdateDto from '@/core/domain/dto/input/agenda-medico-update.
 import AgendasMedicoCreateDto from '@/core/domain/dto/input/agendas-medico-create.dto'
 import Agenda from '@/core/domain/entities/agenda'
 import { ScheduleService } from '@/core/domain/service/schedule-service'
-
+import { AgendaController } from '@/core/operation/controllers/agenda.controller'
 import { AgendaGateway } from '@/core/operation/gateway/agenda.gateway'
 import { Gateway } from '@/core/operation/gateway/gateway'
 import { MedicoGateway } from '@/core/operation/gateway/medico.gateway'
 import { PacienteGateway } from '@/core/operation/gateway/paciente.gateway'
-import { AgendaController } from '@/core/operation/controllers/agenda.controller'
 
 describe('Test for AgendaController Class', () => {
   let controller:AgendaController
@@ -59,12 +58,12 @@ describe('Test for AgendaController Class', () => {
 
   it('create method test', async () => {
     const createDto: AgendaMedicoCreateDto = {
-        crm: '',
-        startAt: new Date("October 15, 2024 11:22:00"),
-        endAt: new Date("October 15, 2024 12:22:00")
-    };
+      crm: '',
+      startAt: new Date('October 15, 2024 11:22:00'),
+      endAt: new Date('October 15, 2024 12:22:00')
+    }
 
-    const agenda = Agenda.create(1, false, new Date("October 14, 2024 11:22:00"), new Date("October 14, 2024 12:22:00"))
+    const agenda = Agenda.create(1, false, new Date('October 14, 2024 11:22:00'), new Date('October 14, 2024 12:22:00'))
 
     mockCreateMedicoAgendaUseCaseHandle.mockResolvedValue(agenda)
 
@@ -77,9 +76,9 @@ describe('Test for AgendaController Class', () => {
 
   it('createAgendas method test', async () => {
     const createDto: AgendasMedicoCreateDto = {
-        crm: '',
-        dates: []
-    };
+      crm: '',
+      dates: []
+    }
 
     await controller.createAgendas(createDto)
 
@@ -89,16 +88,16 @@ describe('Test for AgendaController Class', () => {
 
   it('update method test', async () => {
     const createDto: AgendaMedicoUpdateDto = {
-        agendaId: 1,
-        startAt: new Date("October 15, 2024 11:22:00"),
-        endAt: new Date("October 15, 2024 12:22:00")
-    };
+      agendaId: 1,
+      startAt: new Date('October 15, 2024 11:22:00'),
+      endAt: new Date('October 15, 2024 12:22:00')
+    }
 
-    const agenda = Agenda.create(1, false, new Date("October 14, 2024 11:22:00"), new Date("October 14, 2024 12:22:00"))
+    const agenda = Agenda.create(1, false, new Date('October 14, 2024 11:22:00'), new Date('October 14, 2024 12:22:00'))
 
     mockUpdateMedicoAgendaUseCaseHandle.mockResolvedValue(agenda)
 
-    let result = await controller.update(createDto)
+    const result = await controller.update(createDto)
 
     expect(mockUpdateMedicoAgendaUseCaseHandle).toHaveBeenCalledTimes(1)
     expect(mockUpdateMedicoAgendaUseCaseHandle).toHaveBeenCalledWith(createDto)
@@ -107,15 +106,15 @@ describe('Test for AgendaController Class', () => {
 
   it('schedule method test', async () => {
     const createDto: AgendaConsultaPacienteDto = {
-        agendaId: 1,
-        pacienteId: 1
-    };
+      agendaId: 1,
+      pacienteId: 1
+    }
 
-    const agenda = Agenda.create(1, false, new Date("October 14, 2024 11:22:00"), new Date("October 14, 2024 12:22:00"))
+    const agenda = Agenda.create(1, false, new Date('October 14, 2024 11:22:00'), new Date('October 14, 2024 12:22:00'))
 
     mockCreateConsultaPacienteUseCaseHandle.mockResolvedValue(agenda)
 
-    let result = await controller.schedule(createDto,mockScheduleService, mockGateway, mockPacienteGateway);
+    const result = await controller.schedule(createDto, mockScheduleService, mockGateway, mockPacienteGateway)
 
     expect(mockCreateConsultaPacienteUseCaseHandle).toHaveBeenCalledTimes(1)
     expect(mockCreateConsultaPacienteUseCaseHandle).toHaveBeenCalledWith(createDto)
@@ -124,19 +123,15 @@ describe('Test for AgendaController Class', () => {
 
   it('list method test', async () => {
     const dto: AgendaMedicoListDto = {
-        doctorId: 1
-    };
+      doctorId: 1
+    }
 
     mockListMedicoAgendaUseCaseHandle.mockResolvedValue([])
 
-    let result = await controller.list(dto)
+    const result = await controller.list(dto)
 
     expect(mockListMedicoAgendaUseCaseHandle).toHaveBeenCalledTimes(1)
     expect(mockListMedicoAgendaUseCaseHandle).toHaveBeenCalledWith(dto)
     expect(result).toEqual([])
   })
-
-
-
-
 })

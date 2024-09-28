@@ -1,14 +1,14 @@
 import CreateUsuarioUseCase from '@/core/application/usecase/user/create-usuario.use-case'
 import SignInUseCase from '@/core/application/usecase/user/sign-in.use-case'
-import UserCreateDto from '@/core/domain/dto/input/user-create.dto'
 import SignInDto from '@/core/domain/dto/input/sign-in.dto'
-import Usuario from '@/core/domain/entities/usuario'
+import UserCreateDto from '@/core/domain/dto/input/user-create.dto'
 import { JwtDto } from '@/core/domain/dto/output/jwt.dto'
+import Usuario from '@/core/domain/entities/usuario'
+import { JwtService } from '@/core/domain/service/jtw-service'
 import { UsuarioController } from '@/core/operation/controllers/usuario.controller'
 import { Gateway } from '@/core/operation/gateway/gateway'
-import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
 import { PacienteGateway } from '@/core/operation/gateway/paciente.gateway'
-import { JwtService } from '@/core/domain/service/jtw-service'
+import { UsuarioGateway } from '@/core/operation/gateway/usuario.gateway'
 
 describe('Test for UsuarioController Class', () => {
   let controller:UsuarioController
@@ -57,11 +57,11 @@ describe('Test for UsuarioController Class', () => {
 
   it('create method test', async () => {
     const createDto: UserCreateDto = {
-        name: '',
-        email: '',
-        cpf: '',
-        password: ''
-    };
+      name: '',
+      email: '',
+      cpf: '',
+      password: ''
+    }
 
     const user = await Usuario.buildExistingUsuario(1, 'Test Name', 'test@test.com', '905.489.213-77', '12756312623562', '219837128937912')
 
@@ -76,13 +76,13 @@ describe('Test for UsuarioController Class', () => {
 
   it('signIn method test', async () => {
     const signInDto: SignInDto = {
-        email: '',
-        password: ''
-    };
+      email: '',
+      password: ''
+    }
 
     const jwt: JwtDto = {
-        access_token: ""
-    };
+      access_token: ''
+    }
 
     mockUseCaseSignInHandle.mockResolvedValue(jwt)
 
@@ -92,6 +92,4 @@ describe('Test for UsuarioController Class', () => {
     expect(mockUseCaseSignInHandle).toHaveBeenCalledWith(signInDto)
     expect(result).toEqual(jwt)
   })
-
-
 })
